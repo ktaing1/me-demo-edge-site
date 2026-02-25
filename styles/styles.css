@@ -540,3 +540,14 @@ header nav .nav-hamburger button span {
   margin: 5px 0;
   transition: all 0.3s ease;
 }
+
+
+/* Offset for fixed header */
+body {
+  padding-top: 64px;
+}
+
+main > div:first-child {
+  min-height: calc(92vh - 64px);
+}
+

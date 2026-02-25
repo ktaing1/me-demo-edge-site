@@ -424,3 +424,119 @@ main > div:first-child a:hover {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+
+/* ============================================
+   NAV - Bold & Modern
+   ============================================ */
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 80, 0, 0.15);
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 8vw;
+  max-width: 100%;
+}
+
+/* Brand / Logo */
+header nav .nav-brand p,
+header nav .nav-brand a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+}
+
+header nav .nav-brand strong {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  color: #ff5000;
+}
+
+/* Nav links */
+header nav .nav-sections ul {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header nav .nav-sections ul li a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+header nav .nav-sections ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #ff5000;
+  transition: width 0.25s ease;
+}
+
+header nav .nav-sections ul li a:hover {
+  color: #ffffff;
+}
+
+header nav .nav-sections ul li a:hover::after {
+  width: 100%;
+}
+
+/* Last nav link styled as CTA button */
+header nav .nav-sections ul li:last-child a {
+  color: #ff5000;
+  border: 1px solid rgba(255, 80, 0, 0.4);
+  padding: 0.45rem 1.2rem;
+  transition: all 0.25s ease;
+}
+
+header nav .nav-sections ul li:last-child a:hover {
+  background: #ff5000;
+  color: #fff;
+  border-color: #ff5000;
+}
+
+header nav .nav-sections ul li:last-child a::after {
+  display: none;
+}
+
+/* Hamburger menu on mobile */
+header nav .nav-hamburger button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+header nav .nav-hamburger button span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #ffffff;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+}

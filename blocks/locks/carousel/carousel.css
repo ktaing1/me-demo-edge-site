@@ -58,11 +58,15 @@
   height: 100%;
 }
 
+.carousel-slide-bg,
+.carousel-slide-bg picture,
 .carousel-slide-bg img {
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  display: block;
+  display: block !important;
 }
 
 /* Dark gradient overlay */

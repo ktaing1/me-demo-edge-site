@@ -2,108 +2,111 @@
    HEADER / NAV - Bold & Modern Dark Theme
    ============================================ */
 
-header .header-wrapper {
+header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 9999;
   background: rgba(8, 8, 8, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 80, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 80, 0, 0.2);
+  height: 64px;
 }
 
 header nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 8vw;
+  padding: 0 8vw;
+  height: 64px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Hide all nav sections by default on mobile */
+header nav .nav-sections,
+header nav .nav-tools {
+  display: flex;
+  align-items: center;
 }
 
 /* Brand */
-header nav[aria-label="Brand"] {
-  flex: 0 0 auto;
-}
-
-header nav[aria-label="Brand"] a,
-header nav[aria-label="Brand"] p {
+header nav .nav-brand a,
+header nav .nav-brand p {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #fff;
   text-decoration: none;
-  letter-spacing: 0.08em;
-}
-
-header nav[aria-label="Brand"] strong {
-  color: #ff5000;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 /* Nav links */
-header nav[aria-label="Sections"] ul {
+header nav .nav-sections ul {
   display: flex;
-  gap: 2.5rem;
+  flex-direction: row;
+  gap: 2rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-header nav[aria-label="Sections"] ul li a {
+header nav .nav-sections ul li {
+  display: inline-block;
+}
+
+header nav .nav-sections ul li a {
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   transition: color 0.2s ease;
-  position: relative;
+  white-space: nowrap;
 }
 
-header nav[aria-label="Sections"] ul li a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #ff5000;
-  transition: width 0.25s ease;
-}
-
-header nav[aria-label="Sections"] ul li a:hover {
-  color: #fff;
-}
-
-header nav[aria-label="Sections"] ul li a:hover::after {
-  width: 100%;
-}
-
-/* Last link as CTA */
-header nav[aria-label="Sections"] ul li:last-child a {
+header nav .nav-sections ul li a:hover {
   color: #ff5000;
-  border: 1px solid rgba(255, 80, 0, 0.4);
-  padding: 0.45rem 1.2rem;
 }
 
-header nav[aria-label="Sections"] ul li:last-child a:hover {
+/* Last nav link as CTA */
+header nav .nav-sections ul li:last-child a {
+  color: #ff5000;
+  border: 1px solid rgba(255, 80, 0, 0.5);
+  padding: 0.4rem 1rem;
+  transition: all 0.2s ease;
+}
+
+header nav .nav-sections ul li:last-child a:hover {
   background: #ff5000;
   color: #fff;
-  border-color: #ff5000;
 }
 
-header nav[aria-label="Sections"] ul li:last-child a::after {
+/* Hide hamburger on desktop */
+header nav .nav-hamburger {
   display: none;
 }
 
-/* Hamburger */
-header nav .nav-hamburger button {
-  background: none;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-}
+/* Hamburger on mobile */
+@media (max-width: 900px) {
+  header nav .nav-sections {
+    display: none;
+  }
 
-header nav .nav-hamburger button .icon {
-  filter: invert(1);
+  header nav .nav-hamburger {
+    display: flex;
+    align-items: center;
+  }
+
+  header nav .nav-hamburger button {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    filter: invert(1);
+  }
 }

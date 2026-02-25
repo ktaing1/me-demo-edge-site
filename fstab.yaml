@@ -1,0 +1,9 @@
+mountpoints:
+  /: https://drive.google.com/drive/folders/1kcsU0fSi6RO-Ywx1lHi91GzgPllxKeJu?usp=drive_link
+```
+
+Replace `YOUR_FOLDER_ID` with the ID from your Google Drive folder URL. The ID is the long string of characters at the end of the URL:
+```
+https://drive.google.com/drive/folders/1abc2XYZdef3GHI4jkl
+                                        ^^^^^^^^^^^^^^^^^^^
+                                        this is your folder ID

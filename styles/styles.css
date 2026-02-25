@@ -323,3 +323,104 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+
+
+
+/* ============================================
+   HERO SECTION - Bold & Modern
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+main > div:first-child {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 8vw;
+  background: #080808;
+  position: relative;
+  overflow: hidden;
+}
+
+main > div:first-child::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(255, 80, 0, 0.18) 0%, transparent 65%),
+              radial-gradient(ellipse at 20% 80%, rgba(255, 200, 0, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+main > div:first-child::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 80, 0, 0.15);
+  animation: pulse 6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+main > div:first-child h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 12vw, 11rem);
+  line-height: 0.9;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0 0 2rem 0;
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+main > div:first-child h1 em {
+  font-style: normal;
+  color: #ff5000;
+}
+
+main > div:first-child p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: rgba(255,255,255,0.55);
+  font-weight: 300;
+  max-width: 520px;
+  line-height: 1.65;
+  margin: 0 0 3rem 0;
+  animation: slideUp 0.8s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+main > div:first-child a {
+  font-family: 'DM Sans', sans-serif;
+  display: inline-block;
+  background: #ff5000;
+  color: #fff;
+  text-decoration: none;
+  padding: 1rem 2.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+  animation: slideUp 0.8s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  z-index: 1;
+}
+
+main > div:first-child a:hover {
+  background: #fff;
+  color: #080808;
+  transform: translateY(-2px);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

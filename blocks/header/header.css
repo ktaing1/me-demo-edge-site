@@ -151,3 +151,23 @@ header .nav-hamburger {
 
   header .nav-hamburger-icon::before { top: -7px; }
   header .
+
+
+    /* Hamburger icon fix */
+header .nav-hamburger button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+header .nav-hamburger-icon {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #ffffff;
+  box-shadow: 0 7px 0 #ffffff, 0 -7px 0 #ffffff;
+}

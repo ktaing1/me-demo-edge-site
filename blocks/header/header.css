@@ -1,9 +1,8 @@
 /* ============================================
-   HEADER / NAV - Bold & Modern Dark Theme
+   HEADER / NAV - Bold & Modern
    ============================================ */
 
-header .header-wrapper,
-header .nav-wrapper {
+header {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,34 +10,144 @@ header .nav-wrapper {
   z-index: 9999;
   background: rgba(8, 8, 8, 0.95);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 80, 0, 0.2);
+  height: 64px;
+}
+
+header .nav-wrapper {
+  height: 64px;
 }
 
 header nav {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 8vw;
-  height: 64px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 8vw !important;
+  height: 64px !important;
   box-sizing: border-box;
   width: 100%;
+  overflow: visible !important;
 }
 
 /* Brand */
 header .nav-brand {
   flex: 0 0 auto;
+  display: block !important;
 }
 
 header .nav-brand p {
   margin: 0;
 }
 
-header .nav-brand a,
-header .nav-brand p {
+header .nav-brand a {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.5rem;
-  color: #fff;
+  color: #fff !important;
   text-decoration: none;
-  letter-spacing:
+  letter-spacing: 0.1em;
+}
+
+/* Sections — always visible on desktop */
+header .nav-sections {
+  flex: 1;
+  display: flex !important;
+  justify-content: flex-end;
+  align-items: center;
+  position: static !important;
+  background: none !important;
+  height: auto !important;
+}
+
+header .nav-sections .default-content-wrapper {
+  display: flex;
+  align-items: center;
+  width: auto;
+}
+
+header .nav-sections .default-content-wrapper > ul {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+header .nav-sections .default-content-wrapper > ul > li {
+  display: inline-flex !important;
+  align-items: center;
+  width: auto !important;
+}
+
+header .nav-sections .default-content-wrapper > ul > li > a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6) !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+header .nav-sections .default-content-wrapper > ul > li > a:hover {
+  color: #fff !important;
+}
+
+/* Last item as CTA */
+header .nav-sections .default-content-wrapper > ul > li:last-child > a {
+  color: #ff5000 !important;
+  border: 1px solid rgba(255, 80, 0, 0.5);
+  padding: 0.4rem 1.2rem;
+  transition: all 0.2s ease;
+}
+
+header .nav-sections .default-content-wrapper > ul > li:last-child > a:hover {
+  background: #ff5000;
+  color: #fff !important;
+}
+
+/* Hide hamburger on desktop */
+header .nav-hamburger {
+  display: none !important;
+}
+
+/* ============================================
+   MOBILE < 900px
+   ============================================ */
+@media (max-width: 899px) {
+  header .nav-hamburger {
+    display: flex !important;
+    align-items: center;
+  }
+
+  header .nav-hamburger button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  header .nav-hamburger-icon {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    position: relative;
+  }
+
+  header .nav-hamburger-icon::before,
+  header .nav-hamburger-icon::after {
+    content: '';
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+  }
+
+  header .nav-hamburger-icon::before { top: -7px; }
+  header .

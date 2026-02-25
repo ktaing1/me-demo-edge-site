@@ -547,3 +547,54 @@ body {
   padding-top: 64px;
   margin: 0;
 }
+
+/* ============================================
+   HERO PADDING & TYPOGRAPHY FIXES
+   ============================================ */
+
+/* Fix hero padding */
+main > div:first-child {
+  padding: 6rem 8vw 4rem 8vw !important;
+}
+
+/* H2 color for dark background */
+main h2 {
+  color: #ff5000;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+/* Fix any CSS leaking on sides */
+body {
+  overflow-x: hidden;
+}
+
+main {
+  overflow-x: hidden;
+}
+
+/* Features section styling */
+main > div:nth-child(2) {
+  padding: 4rem 8vw;
+  background: #0d0d0d;
+}
+
+/* Features items */
+main > div:nth-child(2) p {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+main > div:nth-child(2) h3,
+main > div:nth-child(2) p strong {
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 2rem;
+}

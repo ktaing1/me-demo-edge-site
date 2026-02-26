@@ -216,3 +216,25 @@ body {
     font-size: clamp(2rem, 10vw, 3rem) !important;
   }
 }
+
+/* Force carousel container to have height */
+main > div:has(.carousel) {
+  height: 100vh;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+}
+
+.carousel-wrapper {
+  height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+main .section:has(.carousel),
+main > div:first-child {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}

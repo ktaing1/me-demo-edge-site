@@ -1,1 +1,270 @@
+cat > blocks/header/header.css << 'EOF'
+/* ============================================
+   HEADER - Two-Tier Pharma Style Nav
+   ============================================ */
 
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ---- UTILITY BAR (top row) ---- */
+.nav-utility-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 2vw;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.nav-utility-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-utility-links a {
+  font-size: 0.72rem;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-utility-links a:hover {
+  color: #c00;
+  text-decoration: underline;
+}
+
+.nav-divider {
+  color: #ccc;
+  font-size: 0.72rem;
+}
+
+.nav-search {
+  font-size: 0.78rem;
+  color: #c00;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nav-search:hover {
+  text-decoration: underline;
+}
+
+/* ---- MAIN NAV BAR (bottom row) ---- */
+.nav-main-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 2vw;
+  background: #fff;
+  border-bottom: 3px solid #c00;
+  min-height: 64px;
+  box-sizing: border-box;
+}
+
+/* Brand / Logo */
+.nav-brand a {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  line-height: 1.1;
+}
+
+.nav-brand-eyebrow {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #333;
+  text-transform: uppercase;
+}
+
+.nav-brand-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: #c00;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.nav-brand-sub {
+  font-size: 0.65rem;
+  color: #555;
+  letter-spacing: 0.05em;
+}
+
+/* Nav sections */
+.nav-sections {
+  display: flex;
+  align-items: center;
+}
+
+.nav-sections > ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-sections > ul > li {
+  position: relative;
+}
+
+.nav-sections > ul > li > a,
+.nav-sections > ul > li > button {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #c00;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.nav-sections > ul > li > a:hover,
+.nav-sections > ul > li > button:hover {
+  color: #900;
+  text-decoration: underline;
+}
+
+.nav-arrow {
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+}
+
+.nav-drop.open > button .nav-arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menus */
+.nav-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-top: 3px solid #c00;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  z-index: 100;
+}
+
+.nav-drop.open > .nav-dropdown {
+  display: block;
+}
+
+.nav-dropdown li a {
+  display: block;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.82rem;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-dropdown li a:hover {
+  background: #f5f5f5;
+  color: #c00;
+}
+
+/* Hide hamburger on desktop */
+.nav-hamburger {
+  display: none;
+}
+
+/* ---- MOBILE ---- */
+@media (max-width: 900px) {
+  .nav-utility-bar {
+    display: none;
+  }
+
+  .nav-sections {
+    display: none;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 2vw;
+    overflow-y: auto;
+    z-index: 9998;
+  }
+
+  #nav[aria-expanded="true"] .nav-sections {
+    display: flex;
+  }
+
+  .nav-sections > ul {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+
+  .nav-sections > ul > li > a,
+  .nav-sections > ul > li > button {
+    font-size: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-dropdown {
+    position: static;
+    box-shadow: none;
+    border: none;
+    border-top: none;
+    padding: 0 0 0 1rem;
+  }
+
+  .nav-hamburger {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-hamburger button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .nav-hamburger-icon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #333;
+    box-shadow: 0 7px 0 #333, 0 -7px 0 #333;
+  }
+}
+EOF
+
+git add -A
+git commit -m "Pharma-style two-tier nav with dropdowns"
+git push

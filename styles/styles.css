@@ -544,7 +544,7 @@ header nav .nav-hamburger button span {
 
 /* Offset for fixed header */
 body {
-  padding-top: 64px;
+  padding-top: 100px;
   margin: 0;
 }
 
@@ -613,4 +613,12 @@ main > div:first-child {
 .carousel {
   height: 100vh !important;
   margin-top: 0 !important;
+}
+
+/* Carousel should still be full viewport height */
+.carousel-wrapper {
+  margin-top: -100px !important;
+  padding-top: 100px !important;
+  height: 100vh !important;
+  box-sizing: border-box !important;
 }

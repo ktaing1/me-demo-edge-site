@@ -1,46 +1,31 @@
 /*
  * Copyright 2020 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * This file is licensed to you under the Apache License, Version 2.0
  */
 
 :root {
-  /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
+  --background-color: #080808;
+  --light-color: #0d0d0d;
   --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
-
-  /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
-
-  /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
-
-  /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
-
-  /* nav height */
-  --nav-height: 64px;
+  --text-color: #ffffff;
+  --link-color: #ff5000;
+  --link-hover-color: #ff7733;
+  --body-font-family: 'DM Sans', sans-serif;
+  --heading-font-family: 'Bebas Neue', sans-serif;
+  --body-font-size-m: 18px;
+  --body-font-size-s: 16px;
+  --body-font-size-xs: 14px;
+  --heading-font-size-xxl: 45px;
+  --heading-font-size-xl: 36px;
+  --heading-font-size-l: 28px;
+  --heading-font-size-m: 22px;
+  --heading-font-size-s: 20px;
+  --heading-font-size-xs: 18px;
+  --nav-height: 100px;
 }
 
-/* fallback fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 @font-face {
   font-family: roboto-condensed-fallback;
   size-adjust: 88.82%;
@@ -53,39 +38,34 @@
   src: local('Arial');
 }
 
-@media (width >= 900px) {
-  :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
-    /* heading sizes */
-    --heading-font-size-xxl: 45px;
-    --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
   display: none;
   margin: 0;
+  padding: 0;
   background-color: var(--background-color);
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 body.appear {
   display: block;
 }
 
+/* Fixed header space */
 header {
   height: var(--nav-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
 }
 
 header .header,
@@ -98,18 +78,48 @@ footer .footer[data-block-status="loaded"] {
   visibility: visible;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* Push content below fixed header */
+main {
+  margin-top: var(--nav-height);
+  overflow-x: hidden;
+}
+
+/* First section - no extra margin so carousel is flush */
+main > .section:first-of-type {
+  margin-top: 0;
+}
+
+main > .section {
+  margin: 40px 0;
+}
+
+main > .section > div {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+@media (width >= 900px) {
+  main > .section > div {
+    padding: 0 32px;
+  }
+}
+
+/* Carousel section - edge to edge, no padding */
+main > .section:first-of-type > div {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 400;
+  line-height: 1.1;
   scroll-margin: 40px;
+  color: var(--text-color);
 }
 
 h1 { font-size: var(--heading-font-size-xxl); }
@@ -119,163 +129,19 @@ h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
 
-p,
-dl,
-ol,
-ul,
-pre,
-blockquote {
+p, dl, ol, ul, pre, blockquote {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
 }
 
-code,
-pre {
-  font-size: var(--body-font-size-s);
-}
-
-pre {
-  padding: 16px;
-  border-radius: 8px;
-  background-color: var(--light-color);
-  overflow-x: auto;
-  white-space: pre;
-}
-
-main > div {
-  margin: 40px 16px;
-}
-
-input,
-textarea,
-select,
-button {
-  font: inherit;
-}
-
-/* links */
 a:any-link {
   color: var(--link-color);
   text-decoration: none;
-  overflow-wrap: break-word;
 }
 
 a:hover {
   color: var(--link-hover-color);
   text-decoration: underline;
-}
-
-/* buttons */
-p.button-wrapper {
-  margin: 12px 0;
-}
-
-a.button:any-link,
-button.button {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-  margin: 0;
-  border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
-  font: inherit;
-  font-weight: 500;
-  line-height: 1.25;
-  text-decoration: none;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-a.button[aria-disabled="true"],
-button.button:disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-a.button.primary,
-button.button.primary {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: var(--background-color);
-}
-
-a.button.primary:hover,
-a.button.primary:focus-visible,
-button.button.primary:hover,
-button.button.primary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--dark-color);
-  color: var(--light-color);
-}
-
-a.button.primary[aria-disabled="true"],
-a.button.primary[aria-disabled="true"]:hover,
-a.button.primary[aria-disabled="true"]:focus-visible,
-button.button.primary:disabled,
-button.button.primary:disabled:hover,
-button.button.primary:disabled:focus-visible {
-  background-color: var(--light-color);
-  border-color: var(--light-color);
-  color: var(--dark-color);
-}
-
-a.button.secondary,
-button.button.secondary {
-  border-color: var(--text-color);
-  background-color: transparent;
-  color: var(--text-color);
-}
-
-a.button.secondary:hover,
-a.button.secondary:focus-visible,
-button.button.secondary:hover,
-button.button.secondary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--light-color);
-  color: var(--dark-color);
-}
-
-a.button.secondary[aria-disabled="true"],
-a.button.secondary[aria-disabled="true"]:hover,
-a.button.secondary[aria-disabled="true"]:focus-visible,
-button.button.secondary:disabled,
-button.button.secondary:disabled:hover,
-button.button.secondary:disabled:focus-visible {
-  background-color: var(--light-color);
-  border-color: var(--light-color);
-  color: var(--dark-color);
-}
-
-/* high-impact call-to-action */
-a.button.accent,
-button.button.accent {
-  border-color: var(--link-color);
-  background-color: var(--link-color);
-  color: var(--background-color);
-}
-
-a.button.accent:hover,
-a.button.accent:focus-visible,
-button.button.accent:hover,
-button.button.accent:focus-visible {
-  border-color: var(--link-hover-color);
-  background-color: var(--link-hover-color);
-}
-
-a.button.accent[aria-disabled="true"],
-a.button.accent[aria-disabled="true"]:hover,
-a.button.accent[aria-disabled="true"]:focus-visible,
-button.button.accent:disabled,
-button.button.accent:disabled:hover,
-button.button.accent:disabled:focus-visible {
-  background-color: var(--light-color);
-  border-color: var(--light-color);
-  color: var(--dark-color);
 }
 
 main img {
@@ -295,25 +161,20 @@ main img {
   width: 100%;
 }
 
-/* sections */
-main > .section {
-  margin: 40px 0;
+input, textarea, select, button {
+  font: inherit;
 }
 
-main > .section > div {
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 24px;
+code, pre {
+  font-size: var(--body-font-size-s);
 }
 
-main > .section:first-of-type {
-  margin-top: 0;
-}
-
-@media (width >= 900px) {
-  main > .section > div {
-    padding: 0 32px;
-  }
+pre {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--light-color);
+  overflow-x: auto;
+  white-space: pre;
 }
 
 /* section metadata */
@@ -324,240 +185,7 @@ main .section.highlight {
   padding: 40px 0;
 }
 
-
-
-
-/* ============================================
-   HERO SECTION - Bold & Modern
-   ============================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
-
-main > div:first-child {
-  min-height: 92vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 8vw;
-  background: #080808;
-  position: relative;
-  overflow: hidden;
-}
-
-main > div:first-child::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 70% 50%, rgba(255, 80, 0, 0.18) 0%, transparent 65%),
-              radial-gradient(ellipse at 20% 80%, rgba(255, 200, 0, 0.08) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-main > div:first-child::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 80, 0, 0.15);
-  animation: pulse 6s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.05); opacity: 1; }
-}
-
-main > div:first-child h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(4rem, 12vw, 11rem);
-  line-height: 0.9;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-  margin: 0 0 2rem 0;
-  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-main > div:first-child h1 em {
-  font-style: normal;
-  color: #ff5000;
-}
-
-main > div:first-child p {
-  font-family: 'DM Sans', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.35rem);
-  color: rgba(255,255,255,0.55);
-  font-weight: 300;
-  max-width: 520px;
-  line-height: 1.65;
-  margin: 0 0 3rem 0;
-  animation: slideUp 0.8s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-main > div:first-child a {
-  font-family: 'DM Sans', sans-serif;
-  display: inline-block;
-  background: #ff5000;
-  color: #fff;
-  text-decoration: none;
-  padding: 1rem 2.5rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: all 0.25s ease;
-  animation: slideUp 0.8s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
-  position: relative;
-  z-index: 1;
-}
-
-main > div:first-child a:hover {
-  background: #fff;
-  color: #080808;
-  transform: translateY(-2px);
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-/* ============================================
-   NAV - Bold & Modern
-   ============================================ */
-
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(8, 8, 8, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 80, 0, 0.15);
-}
-
-header nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 8vw;
-  max-width: 100%;
-}
-
-/* Brand / Logo */
-header nav .nav-brand p,
-header nav .nav-brand a {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem;
-  color: #ffffff;
-  text-decoration: none;
-  letter-spacing: 0.08em;
-}
-
-header nav .nav-brand strong {
-  font-family: 'Bebas Neue', sans-serif;
-  font-weight: 400;
-  color: #ff5000;
-}
-
-/* Nav links */
-header nav .nav-sections ul {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-header nav .nav-sections ul li a {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  text-decoration: none;
-  transition: color 0.2s ease;
-  position: relative;
-}
-
-header nav .nav-sections ul li a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #ff5000;
-  transition: width 0.25s ease;
-}
-
-header nav .nav-sections ul li a:hover {
-  color: #ffffff;
-}
-
-header nav .nav-sections ul li a:hover::after {
-  width: 100%;
-}
-
-/* Last nav link styled as CTA button */
-header nav .nav-sections ul li:last-child a {
-  color: #ff5000;
-  border: 1px solid rgba(255, 80, 0, 0.4);
-  padding: 0.45rem 1.2rem;
-  transition: all 0.25s ease;
-}
-
-header nav .nav-sections ul li:last-child a:hover {
-  background: #ff5000;
-  color: #fff;
-  border-color: #ff5000;
-}
-
-header nav .nav-sections ul li:last-child a::after {
-  display: none;
-}
-
-/* Hamburger menu on mobile */
-header nav .nav-hamburger button {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-header nav .nav-hamburger button span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #ffffff;
-  margin: 5px 0;
-  transition: all 0.3s ease;
-}
-
-
-/* Offset for fixed header */
-body {
-  padding-top: 100px;
-  margin: 0;
-}
-
-/* ============================================
-   HERO PADDING & TYPOGRAPHY FIXES
-   ============================================ */
-
-/* Fix hero padding */
-main > div:first-child {
-  padding: 6rem 8vw 4rem 8vw !important;
-}
-
-/* H2 color for dark background */
+/* Features section */
 main h2 {
   color: #ff5000;
   font-family: 'Bebas Neue', sans-serif;
@@ -566,59 +194,7 @@ main h2 {
   margin-bottom: 2rem;
 }
 
-/* Fix any CSS leaking on sides */
-body {
-  overflow-x: hidden;
-}
-
-main {
-  overflow-x: hidden;
-}
-
-/* Features section styling */
-main > div:nth-child(2) {
-  padding: 4rem 8vw;
-  background: #0d0d0d;
-}
-
-/* Features items */
-main > div:nth-child(2) p {
-  color: rgba(255, 255, 255, 0.7);
+main p {
+  color: rgba(255,255,255,0.7);
   font-family: 'DM Sans', sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 0.5rem;
-}
-
-main > div:nth-child(2) h3,
-main > div:nth-child(2) p strong {
-  color: #ffffff;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 2rem;
-}
-
-
-/* Fix carousel behind header */
-body {
-  padding-top: 100px;
-}
-
-.carousel-wrapper,
-main > div:first-child {
-  margin-top: -100px !important;
-}
-
-.carousel {
-  height: 100vh !important;
-  margin-top: 0 !important;
-}
-
-/* Carousel should still be full viewport height */
-.carousel-wrapper {
-  margin-top: -100px !important;
-  padding-top: 100px !important;
-  height: 100vh !important;
-  box-sizing: border-box !important;
 }

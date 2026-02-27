@@ -73,7 +73,7 @@
 .carousel-slide-content h1,
 .carousel-slide-content h2 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem, 9vw, 8rem);
+  font-size: clamp(1.2rem, 2.5vw, 2.2rem);
   line-height: 0.95;
   color: #ffffff;
   margin: 0 0 1.5rem 0;
@@ -175,7 +175,7 @@
 
   .carousel-slide-content h1,
   .carousel-slide-content h2 {
-    font-size: clamp(2.5rem, 12vw, 5rem);
+    font-size: clamp(1rem, 5vw, 2rem);
   }
 
   .carousel-btn {

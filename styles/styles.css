@@ -598,3 +598,19 @@ main > div:nth-child(2) p strong {
   font-weight: 600;
   margin-top: 2rem;
 }
+
+
+/* Fix carousel behind header */
+body {
+  padding-top: 100px;
+}
+
+.carousel-wrapper,
+main > div:first-child {
+  margin-top: -100px !important;
+}
+
+.carousel {
+  height: 100vh !important;
+  margin-top: 0 !important;
+}

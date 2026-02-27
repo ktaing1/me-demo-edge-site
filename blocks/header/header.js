@@ -1,8 +1,4 @@
-cd ~/Desktop/me-demo-edge-site
 
-cat > blocks/header/header.js << 'EOF'
-export default async function decorate(block) {
-  block.innerHTML = `
     <nav id="nav">
       <!-- Top utility bar -->
       <div class="nav-utility-bar">
@@ -99,5 +95,4 @@ export default async function decorate(block) {
     const expanded = nav.getAttribute('aria-expanded') === 'true';
     nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   });
-}
-EOF
+

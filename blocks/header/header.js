@@ -1,63 +1,79 @@
+async function fetchNav() {
+  const resp = await fetch('/nav');
+  const html = await resp.text();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  return doc;
+}
+
 export default async function decorate(block) {
+  const navDoc = await fetchNav();
+
+  // AEM renders nav doc sections as <div> blocks
+  // Typically: first section = brand, second = nav links, third = utility links
+  const sections = [...navDoc.querySelectorAll('main > div')];
+
+  const brandSection = sections[0];
+  const linksSection = sections[1];
+  const utilitySection = sections[2];
+
+  // Extract brand HTML
+  const brandHTML = brandSection ? brandSection.innerHTML : '<a href="/">THE DEMO</a>';
+
+  // Build nav links from the links section
+  // Links section contains a <ul> with nav items
+  let navLinksHTML = '';
+  if (linksSection) {
+    const ul = linksSection.querySelector('ul');
+    if (ul) {
+      const items = [...ul.querySelectorAll(':scope > li')];
+      navLinksHTML = items.map(li => {
+        const nestedUl = li.querySelector('ul');
+        const topLink = li.querySelector(':scope > a') || li.firstChild;
+        const topText = topLink?.textContent?.trim() || li.textContent.trim();
+        const topHref = topLink?.href || '#';
+
+        if (nestedUl) {
+          // Has dropdown
+          const dropItems = [...nestedUl.querySelectorAll('li')].map(sub => {
+            const a = sub.querySelector('a');
+            return a ? `<li><a href="${a.href}">${a.textContent.trim()}</a></li>` : '';
+          }).join('');
+          return `
+            <li class="nav-drop">
+              <button type="button">${topText} <span class="nav-arrow">&#8964;</span></button>
+              <ul class="nav-dropdown">${dropItems}</ul>
+            </li>
+          `;
+        }
+
+        return `<li><a href="${topHref}">${topText}</a></li>`;
+      }).join('');
+    }
+  }
+
+  // Build utility links from utility section
+  let utilityLinksHTML = '';
+  let searchHTML = '<a href="#" class="nav-search">&#128269; Search</a>';
+  if (utilitySection) {
+    const links = [...utilitySection.querySelectorAll('a')];
+    utilityLinksHTML = links.map((a, i) => {
+      const divider = i < links.length - 1 ? '<span class="nav-divider">|</span>' : '';
+      return `<a href="${a.href}">${a.textContent.trim()}</a>${divider}`;
+    }).join('');
+  }
+
   block.innerHTML = `
     <nav id="nav" aria-expanded="false">
-      <!-- Top utility bar -->
       <div class="nav-utility-bar">
-        <div class="nav-utility-links">
-          <a href="#">Important Safety Information</a>
-          <span class="nav-divider">|</span>
-          <a href="#">Prescribing Information</a>
-          <span class="nav-divider">|</span>
-          <a href="#">Medication Guide</a>
-          <span class="nav-divider">|</span>
-          <a href="#">En Español</a>
-          <span class="nav-divider">|</span>
-          <a href="#">Health Care Professionals Site</a>
-        </div>
-        <a href="#" class="nav-search">&#128269; Search</a>
+        <div class="nav-utility-links">${utilityLinksHTML}</div>
+        ${searchHTML}
       </div>
-
-      <!-- Main nav bar -->
       <div class="nav-main-bar">
-        <div class="nav-brand">
-          <a href="/">
-            <span class="nav-brand-eyebrow">ONCE-WEEKLY</span>
-            <span class="nav-brand-name">THE DEMO</span>
-            <span class="nav-brand-sub">edge delivery services</span>
-          </a>
-        </div>
-
+        <div class="nav-brand">${brandHTML}</div>
         <div class="nav-sections">
-          <ul>
-            <li class="nav-drop">
-              <button type="button">Why The Demo? <span class="nav-arrow">&#8964;</span></button>
-              <ul class="nav-dropdown">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#why-edge-delivery">About Edge Delivery</a></li>
-                <li><a href="#">Performance</a></li>
-              </ul>
-            </li>
-            <li class="nav-drop">
-              <button type="button">How It Works <span class="nav-arrow">&#8964;</span></button>
-              <ul class="nav-dropdown">
-                <li><a href="#">Setup Guide</a></li>
-                <li><a href="#">Google Drive Integration</a></li>
-                <li><a href="#">GitHub Deployment</a></li>
-              </ul>
-            </li>
-            <li class="nav-drop">
-              <button type="button">Resources <span class="nav-arrow">&#8964;</span></button>
-              <ul class="nav-dropdown">
-                <li><a href="#">Documentation</a></li>
-                <li><a href="#">Block Library</a></li>
-                <li><a href="#">Community</a></li>
-              </ul>
-            </li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Videos &amp; Demos</a></li>
-          </ul>
+          <ul>${navLinksHTML}</ul>
         </div>
-
         <div class="nav-hamburger">
           <button type="button" aria-label="Open navigation">
             <span class="nav-hamburger-icon"></span>
@@ -92,11 +108,10 @@ export default async function decorate(block) {
     const expanded = nav.getAttribute('aria-expanded') === 'true';
     nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     hamburger.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
-    // Prevent body scroll when menu open
     document.body.style.overflow = expanded ? '' : 'hidden';
   });
 
-  // Close menu on nav link click (mobile)
+  // Close menu on link click (mobile)
   nav.querySelectorAll('.nav-sections a').forEach((link) => {
     link.addEventListener('click', () => {
       nav.setAttribute('aria-expanded', 'false');

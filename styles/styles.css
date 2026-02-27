@@ -198,3 +198,42 @@ main p {
   color: rgba(255,255,255,0.7);
   font-family: 'DM Sans', sans-serif;
 }
+
+
+
+
+/* ============================================
+   HEADER BACKGROUND FIX
+   ============================================ */
+
+/* Header needs white background for pharma nav */
+header {
+  background: #fff !important;
+}
+
+/* Nav brand text colors - override white text-color variable */
+header .nav-brand-name {
+  color: #c00 !important;
+}
+
+header .nav-brand-eyebrow,
+header .nav-brand-sub {
+  color: #333 !important;
+}
+
+/* Utility bar and main nav text */
+header .nav-utility-links a,
+header .nav-divider {
+  color: #333 !important;
+}
+
+header .nav-sections > ul > li > a,
+header .nav-sections > ul > li > button {
+  color: #c00 !important;
+}
+
+/* Fix nav height to actual two-tier height */
+:root {
+  --nav-height: 95px;
+}
+

@@ -135,4 +135,70 @@ export default function decorate(block) {
   const dotsContainer = document.createElement('div');
   dotsContainer.style.cssText = `
     position: absolute; bottom: 2rem; left: 50%;
-    transform: translateX(
+    transform: translateX(-50%);
+    z-index: 10; display: flex; gap: 0.6rem;
+  `;
+  rows.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.style.cssText = `
+      width: 8px; height: 8px; border-radius: 50%;
+      border: none; padding: 0; cursor: pointer;
+      background: ${i === 0 ? '#ff5000' : 'rgba(255,255,255,0.3)'};
+      transition: all 0.25s ease;
+    `;
+    dotsContainer.append(dot);
+  });
+  block.append(dotsContainer);
+
+  const dots = [...dotsContainer.children];
+
+  function goTo(index) {
+    rows.forEach((row, i) => {
+      row.style.opacity = i === index ? '1' : '0';
+      row.style.zIndex = i === index ? '1' : '0';
+      dots[i].style.background = i === index ? '#ff5000' : 'rgba(255,255,255,0.3)';
+    });
+  }
+
+  let current = 0;
+
+  prev.addEventListener('click', () => {
+    current = (current - 1 + rows.length) % rows.length;
+    goTo(current);
+  });
+
+  next.addEventListener('click', () => {
+    current = (current + 1) % rows.length;
+    goTo(current);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      current = i;
+      goTo(current);
+    });
+  });
+
+  let autoplay = setInterval(() => {
+    current = (current + 1) % rows.length;
+    goTo(current);
+  }, 5000);
+
+  block.addEventListener('mouseenter', () => clearInterval(autoplay));
+  block.addEventListener('mouseleave', () => {
+    autoplay = setInterval(() => {
+      current = (current + 1) % rows.length;
+      goTo(current);
+    }, 5000);
+  });
+
+  let startX = 0;
+  block.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  block.addEventListener('touchend', (e) => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      current = (current + (diff > 0 ? 1 : -1) + rows.length) % rows.length;
+      goTo(current);
+    }
+  });
+}

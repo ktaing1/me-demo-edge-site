@@ -182,3 +182,17 @@
     display: none;
   }
 }
+
+
+/* Carousel heading size fix */
+.carousel-wrapper h1,
+.carousel-wrapper h2,
+.carousel-wrapper h3,
+.carousel h1,
+.carousel h2,
+.carousel h3,
+.carousel .block h1,
+.carousel .block h2 {
+  font-size: clamp(1.2rem, 2.5vw, 2.2rem) !important;
+  line-height: 1.2 !important;
+}

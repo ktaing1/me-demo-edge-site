@@ -2,64 +2,61 @@ async function fetchNav() {
   const resp = await fetch('/nav');
   const html = await resp.text();
   const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  return doc;
+  return parser.parseFromString(html, 'text/html');
 }
 
 export default async function decorate(block) {
   const navDoc = await fetchNav();
-
-  // AEM renders nav doc sections as <div> blocks
-  // Typically: first section = brand, second = nav links, third = utility links
   const sections = [...navDoc.querySelectorAll('main > div')];
 
   const brandSection = sections[0];
   const linksSection = sections[1];
   const utilitySection = sections[2];
 
-  // Extract brand HTML
-  const brandHTML = brandSection ? brandSection.innerHTML : '<a href="/">THE DEMO</a>';
+  // Brand - h1 text + p subtitle
+  const brandName = brandSection?.querySelector('h1')?.textContent?.trim() || 'THE DEMO';
+  const brandSub = brandSection?.querySelector('p')?.textContent?.trim() || '';
 
-  // Build nav links from the links section
-  // Links section contains a <ul> with nav items
+  // Nav links - build from ul with nested uls for dropdowns
   let navLinksHTML = '';
   if (linksSection) {
-    const ul = linksSection.querySelector('ul');
-    if (ul) {
-      const items = [...ul.querySelectorAll(':scope > li')];
-      navLinksHTML = items.map(li => {
-        const nestedUl = li.querySelector('ul');
-        const topLink = li.querySelector(':scope > a') || li.firstChild;
-        const topText = topLink?.textContent?.trim() || li.textContent.trim();
-        const topHref = topLink?.href || '#';
+    const topItems = [...linksSection.querySelectorAll(':scope > ul > li')];
+    navLinksHTML = topItems.map(li => {
+      const nestedUl = li.querySelector('ul');
+      // Get just the top-level text (not nested list text)
+      const topText = [...li.childNodes]
+        .filter(n => n.nodeType === Node.TEXT_NODE)
+        .map(n => n.textContent.trim())
+        .join('') || li.firstChild?.textContent?.trim();
+      const topLink = li.querySelector(':scope > a');
 
-        if (nestedUl) {
-          // Has dropdown
-          const dropItems = [...nestedUl.querySelectorAll('li')].map(sub => {
-            const a = sub.querySelector('a');
-            return a ? `<li><a href="${a.href}">${a.textContent.trim()}</a></li>` : '';
-          }).join('');
-          return `
-            <li class="nav-drop">
-              <button type="button">${topText} <span class="nav-arrow">&#8964;</span></button>
-              <ul class="nav-dropdown">${dropItems}</ul>
-            </li>
-          `;
-        }
+      if (nestedUl) {
+        const dropItems = [...nestedUl.querySelectorAll('li')].map(sub => {
+          const a = sub.querySelector('a');
+          return a
+            ? `<li><a href="${a.getAttribute('href')}">${a.textContent.trim()}</a></li>`
+            : `<li><a href="#">${sub.textContent.trim()}</a></li>`;
+        }).join('');
+        return `
+          <li class="nav-drop">
+            <button type="button">${topText} <span class="nav-arrow">&#8964;</span></button>
+            <ul class="nav-dropdown">${dropItems}</ul>
+          </li>`;
+      }
 
-        return `<li><a href="${topHref}">${topText}</a></li>`;
-      }).join('');
-    }
+      return topLink
+        ? `<li><a href="${topLink.getAttribute('href')}">${topText}</a></li>`
+        : `<li><a href="#">${topText}</a></li>`;
+    }).join('');
   }
 
-  // Build utility links from utility section
+  // Utility links
   let utilityLinksHTML = '';
-  let searchHTML = '<a href="#" class="nav-search">&#128269; Search</a>';
   if (utilitySection) {
     const links = [...utilitySection.querySelectorAll('a')];
     utilityLinksHTML = links.map((a, i) => {
       const divider = i < links.length - 1 ? '<span class="nav-divider">|</span>' : '';
-      return `<a href="${a.href}">${a.textContent.trim()}</a>${divider}`;
+      return `<a href="${a.getAttribute('href')}">${a.textContent.trim()}</a>${divider}`;
     }).join('');
   }
 
@@ -67,10 +64,16 @@ export default async function decorate(block) {
     <nav id="nav" aria-expanded="false">
       <div class="nav-utility-bar">
         <div class="nav-utility-links">${utilityLinksHTML}</div>
-        ${searchHTML}
+        <a href="#" class="nav-search">&#128269; Search</a>
       </div>
       <div class="nav-main-bar">
-        <div class="nav-brand">${brandHTML}</div>
+        <div class="nav-brand">
+          <a href="/">
+            <span class="nav-brand-eyebrow">ONCE-WEEKLY</span>
+            <span class="nav-brand-name">${brandName}</span>
+            <span class="nav-brand-sub">${brandSub}</span>
+          </a>
+        </div>
         <div class="nav-sections">
           <ul>${navLinksHTML}</ul>
         </div>
@@ -95,14 +98,14 @@ export default async function decorate(block) {
     });
   });
 
-  // Close dropdowns on outside click
+  // Close on outside click
   document.addEventListener('click', (e) => {
     if (!nav.contains(e.target)) {
       nav.querySelectorAll('.nav-drop').forEach((d) => d.classList.remove('open'));
     }
   });
 
-  // Hamburger toggle
+  // Hamburger
   const hamburger = nav.querySelector('.nav-hamburger button');
   hamburger.addEventListener('click', () => {
     const expanded = nav.getAttribute('aria-expanded') === 'true';

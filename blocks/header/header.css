@@ -263,8 +263,4 @@ header {
     box-shadow: 0 7px 0 #333, 0 -7px 0 #333;
   }
 }
-EOF
 
-git add -A
-git commit -m "Pharma-style two-tier nav with dropdowns"
-git push

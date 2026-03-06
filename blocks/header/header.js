@@ -77,9 +77,10 @@ export default async function decorate(block) {
         <div class="nav-sections">
           <ul>${navLinksHTML}</ul>
         </div>
-        <div class="nav-hamburger">
+       <div class="nav-hamburger">
           <button type="button" aria-label="Open navigation">
             <span class="nav-hamburger-icon"></span>
+            <span class="nav-close-icon" style="display:none; font-size:1.5rem; line-height:1; color:#333;">&#10005;</span>
           </button>
         </div>
       </div>
@@ -106,12 +107,18 @@ export default async function decorate(block) {
   });
 
 // Hamburger
-  const hamburger = nav.querySelector('.nav-hamburger button');
+   const hamburger = nav.querySelector('.nav-hamburger button');
+  const hamburgerIcon = hamburger.querySelector('.nav-hamburger-icon');
+  const closeIcon = hamburger.querySelector('.nav-close-icon');
+
   hamburger.addEventListener('click', () => {
     const expanded = nav.getAttribute('aria-expanded') === 'true';
     nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     hamburger.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
     document.body.style.overflow = expanded ? '' : 'hidden';
+    hamburgerIcon.style.display = expanded ? 'block' : 'none';
+    closeIcon.style.display = expanded ? 'none' : 'block';
+  });
     // Toggle icon between hamburger and X
     const icon = hamburger.querySelector('.nav-hamburger-icon');
     if (expanded) {

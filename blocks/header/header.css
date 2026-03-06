@@ -153,8 +153,10 @@ header .nav-hamburger button {
   cursor: pointer !important;
   padding: 8px !important;
   display: flex !important;
-  flex-direction: column !important;
-  gap: 5px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 
 header .nav-hamburger-icon {
@@ -419,10 +421,22 @@ header #nav[aria-expanded="true"] .nav-search {
 /* Close button X - always in DOM, toggled by aria-expanded */
 header .nav-close-icon {
   display: none !important;
-  font-size: 1.4rem !important;
+  font-size: 1.6rem !important;
   line-height: 1 !important;
   color: #333 !important;
-  font-style: normal !important;
+  font-weight: 300 !important;
+  width: 24px !important;
+  height: 24px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+header #nav[aria-expanded="true"] .nav-hamburger-icon {
+  display: none !important;
+}
+
+header #nav[aria-expanded="true"] .nav-close-icon {
+  display: flex !important;
 }
 
 header #nav[aria-expanded="true"] .nav-hamburger-icon {

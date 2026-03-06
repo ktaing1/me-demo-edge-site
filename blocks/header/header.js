@@ -34,8 +34,7 @@ export default async function decorate(block) {
             ? `<li><a href="${a.getAttribute('href')}">${a.textContent.trim()}</a></li>`
             : `<li><a href="#">${sub.textContent.trim()}</a></li>`;
         }).join('');
-        return `
-          <li class="nav-drop">
+        return `<li class="nav-drop">
             <button type="button">${topText} <span class="nav-arrow">&#8964;</span></button>
             <ul class="nav-dropdown">${dropItems}</ul>
           </li>`;
@@ -73,63 +72,49 @@ export default async function decorate(block) {
           <ul>${navLinksHTML}</ul>
         </div>
         <div class="nav-hamburger">
-          <button type="button" aria-label="Open navigation">
-            <span class="nav-hamburger-icon"></span>
-            <span class="nav-close-icon">&#10005;</span>
+          <button class="nav-open-btn" type="button" aria-label="Open navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
           </button>
+          <button class="nav-close-btn" type="button" aria-label="Close navigation">&#10005;</button>
         </div>
       </div>
     </nav>
   `;
 
   const nav = block.querySelector('#nav');
-  const hamburger = nav.querySelector('.nav-hamburger button');
-  const hamburgerIcon = hamburger.querySelector('.nav-hamburger-icon');
-  const closeIcon = hamburger.querySelector('.nav-close-icon');
 
-  // Hide close icon by default
-  closeIcon.style.cssText = `
-    display: none;
-    font-size: 1.4rem;
-    line-height: 1;
-    color: #333;
-    font-style: normal;
-  `;
+  function openMenu() {
+    nav.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
 
-  // Dropdown toggles
+  function closeMenu() {
+    nav.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    nav.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
+  }
+
+  nav.querySelector('.nav-open-btn').addEventListener('click', openMenu);
+  nav.querySelector('.nav-close-btn').addEventListener('click', closeMenu);
+
   nav.querySelectorAll('.nav-drop > button').forEach((btn) => {
     btn.addEventListener('click', () => {
       const li = btn.parentElement;
       const isOpen = li.classList.contains('open');
-      nav.querySelectorAll('.nav-drop').forEach((d) => d.classList.remove('open'));
+      nav.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
       if (!isOpen) li.classList.add('open');
     });
   });
 
-  // Close on outside click
   document.addEventListener('click', (e) => {
     if (!nav.contains(e.target)) {
-      nav.querySelectorAll('.nav-drop').forEach((d) => d.classList.remove('open'));
+      nav.querySelectorAll('.nav-drop').forEach(d => d.classList.remove('open'));
     }
   });
 
-  // Hamburger toggle
-  hamburger.addEventListener('click', () => {
-    const expanded = nav.getAttribute('aria-expanded') === 'true';
-    nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-    hamburger.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
-    document.body.style.overflow = expanded ? '' : 'hidden';
-    hamburgerIcon.style.display = expanded ? 'block' : 'none';
-    closeIcon.style.display = expanded ? 'none' : 'block';
-  });
-
-  // Close menu on link click
-  nav.querySelectorAll('.nav-sections a').forEach((link) => {
-    link.addEventListener('click', () => {
-      nav.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-      hamburgerIcon.style.display = 'block';
-      closeIcon.style.display = 'none';
-    });
+  nav.querySelectorAll('.nav-sections a').forEach(link => {
+    link.addEventListener('click', closeMenu);
   });
 }

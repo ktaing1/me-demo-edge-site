@@ -13,17 +13,14 @@ export default async function decorate(block) {
   const linksSection = sections[1];
   const utilitySection = sections[2];
 
-  // Brand - h1 text + p subtitle
   const brandName = brandSection?.querySelector('h1')?.textContent?.trim() || 'THE DEMO';
   const brandSub = brandSection?.querySelector('p')?.textContent?.trim() || '';
 
-  // Nav links - build from ul with nested uls for dropdowns
   let navLinksHTML = '';
   if (linksSection) {
     const topItems = [...linksSection.querySelectorAll(':scope > ul > li')];
     navLinksHTML = topItems.map(li => {
       const nestedUl = li.querySelector('ul');
-      // Get just the top-level text (not nested list text)
       const topText = [...li.childNodes]
         .filter(n => n.nodeType === Node.TEXT_NODE)
         .map(n => n.textContent.trim())
@@ -43,14 +40,12 @@ export default async function decorate(block) {
             <ul class="nav-dropdown">${dropItems}</ul>
           </li>`;
       }
-
       return topLink
         ? `<li><a href="${topLink.getAttribute('href')}">${topText}</a></li>`
         : `<li><a href="#">${topText}</a></li>`;
     }).join('');
   }
 
-  // Utility links
   let utilityLinksHTML = '';
   if (utilitySection) {
     const links = [...utilitySection.querySelectorAll('a')];
@@ -77,10 +72,10 @@ export default async function decorate(block) {
         <div class="nav-sections">
           <ul>${navLinksHTML}</ul>
         </div>
-       <div class="nav-hamburger">
+        <div class="nav-hamburger">
           <button type="button" aria-label="Open navigation">
             <span class="nav-hamburger-icon"></span>
-            <span class="nav-close-icon" style="display:none; font-size:1.5rem; line-height:1; color:#333;">&#10005;</span>
+            <span class="nav-close-icon">&#10005;</span>
           </button>
         </div>
       </div>
@@ -88,6 +83,18 @@ export default async function decorate(block) {
   `;
 
   const nav = block.querySelector('#nav');
+  const hamburger = nav.querySelector('.nav-hamburger button');
+  const hamburgerIcon = hamburger.querySelector('.nav-hamburger-icon');
+  const closeIcon = hamburger.querySelector('.nav-close-icon');
+
+  // Hide close icon by default
+  closeIcon.style.cssText = `
+    display: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: #333;
+    font-style: normal;
+  `;
 
   // Dropdown toggles
   nav.querySelectorAll('.nav-drop > button').forEach((btn) => {
@@ -106,11 +113,7 @@ export default async function decorate(block) {
     }
   });
 
-// Hamburger
-   const hamburger = nav.querySelector('.nav-hamburger button');
-  const hamburgerIcon = hamburger.querySelector('.nav-hamburger-icon');
-  const closeIcon = hamburger.querySelector('.nav-close-icon');
-
+  // Hamburger toggle
   hamburger.addEventListener('click', () => {
     const expanded = nav.getAttribute('aria-expanded') === 'true';
     nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
@@ -119,42 +122,14 @@ export default async function decorate(block) {
     hamburgerIcon.style.display = expanded ? 'block' : 'none';
     closeIcon.style.display = expanded ? 'none' : 'block';
   });
-    // Toggle icon between hamburger and X
-    const icon = hamburger.querySelector('.nav-hamburger-icon');
-    if (expanded) {
-      icon.style.cssText = '';
-    } else {
-      icon.style.cssText = `
-        background: transparent;
-        box-shadow: none;
-        position: relative;
-        width: 24px;
-        height: 24px;
-      `;
-      icon.innerHTML = `
-        <span style="
-          position: absolute; top: 50%; left: 0;
-          width: 24px; height: 2px;
-          background: #333;
-          transform: rotate(45deg);
-          display: block;
-        "></span>
-        <span style="
-          position: absolute; top: 50%; left: 0;
-          width: 24px; height: 2px;
-          background: #333;
-          transform: rotate(-45deg);
-          display: block;
-        "></span>
-      `;
-    }
-  });
 
-  // Close menu on link click (mobile)
+  // Close menu on link click
   nav.querySelectorAll('.nav-sections a').forEach((link) => {
     link.addEventListener('click', () => {
       nav.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      hamburgerIcon.style.display = 'block';
+      closeIcon.style.display = 'none';
     });
   });
 }

@@ -28,7 +28,7 @@ header #nav {
   padding: 0 !important;
 }
 
-/* ---- UTILITY BAR - mobile shows only 2 priority links ---- */
+/* ---- UTILITY BAR ---- */
 header .nav-utility-bar {
   display: flex !important;
   align-items: center !important;
@@ -37,38 +37,29 @@ header .nav-utility-bar {
   background: #f7f7f7 !important;
   border-bottom: 1px solid #e8e8e8 !important;
   width: 100% !important;
-  gap: 0 !important;
 }
 
 header .nav-utility-links {
   display: flex !important;
   align-items: center !important;
-  gap: 0 !important;
   flex-wrap: nowrap !important;
 }
 
-/* Hide all utility links on mobile by default */
+/* Hide all utility links on mobile */
 header .nav-utility-links a {
   display: none !important;
   font-size: 0.68rem !important;
   color: #444 !important;
   text-decoration: none !important;
   white-space: nowrap !important;
-  padding: 0 !important;
 }
 
-header .nav-utility-links a:hover {
-  color: #c00 !important;
-  text-decoration: underline !important;
-}
-
-/* Show only first 2 links (ISI + Medication Guide) on mobile */
+/* Show only 1st and 3rd links on mobile (ISI + Medication Guide) */
 header .nav-utility-links a:nth-child(1),
 header .nav-utility-links a:nth-child(3) {
   display: inline !important;
 }
 
-/* Show dividers only between visible links */
 header .nav-divider {
   display: none !important;
   color: #bbb !important;
@@ -76,6 +67,7 @@ header .nav-divider {
   padding: 0 0.4rem !important;
 }
 
+/* Show divider between the 2 visible mobile links */
 header .nav-utility-links a:nth-child(1) + .nav-divider {
   display: inline !important;
 }
@@ -99,10 +91,6 @@ header .nav-main-bar {
 }
 
 /* Brand */
-header .nav-brand {
-  flex: 0 0 auto !important;
-}
-
 header .nav-brand a {
   display: flex !important;
   flex-direction: column !important;
@@ -141,30 +129,56 @@ header .nav-sections {
   display: none !important;
 }
 
-/* Hamburger visible on mobile */
+/* ---- HAMBURGER ---- */
 header .nav-hamburger {
   display: flex !important;
   align-items: center !important;
 }
 
-header .nav-hamburger button {
+/* Open button (3 bars) */
+header .nav-open-btn {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 5px !important;
   background: none !important;
   border: none !important;
   cursor: pointer !important;
   padding: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
   width: 40px !important;
   height: 40px !important;
 }
 
-header .nav-hamburger-icon {
+header .nav-open-btn .bar {
   display: block !important;
   width: 24px !important;
   height: 2px !important;
   background: #333 !important;
-  box-shadow: 0 7px 0 #333, 0 -7px 0 #333 !important;
+}
+
+/* Close button (X) */
+header .nav-close-btn {
+  display: none !important;
+  background: none !important;
+  border: none !important;
+  font-size: 1.6rem !important;
+  color: #333 !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+/* When menu is open - swap buttons */
+header #nav[aria-expanded="true"] .nav-open-btn {
+  display: none !important;
+}
+
+header #nav[aria-expanded="true"] .nav-close-btn {
+  display: flex !important;
 }
 
 /* ---- MOBILE MENU OPEN ---- */
@@ -172,7 +186,7 @@ header #nav[aria-expanded="true"] .nav-sections {
   display: flex !important;
   flex-direction: column !important;
   position: fixed !important;
-  top: 90px !important;
+  top: 88px !important;
   left: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
@@ -256,7 +270,7 @@ header .nav-drop.open > button .nav-arrow {
   transform: rotate(180deg) !important;
 }
 
-/* All utility links shown in mobile menu */
+/* All utility links in open mobile menu */
 header #nav[aria-expanded="true"] .nav-utility-bar {
   justify-content: flex-start !important;
   flex-direction: column !important;
@@ -296,18 +310,14 @@ header #nav[aria-expanded="true"] .nav-search {
    DESKTOP 900px+
    ============================================ */
 @media (min-width: 900px) {
-  /* Utility bar - right aligned on desktop */
   header .nav-utility-bar {
     justify-content: flex-end !important;
     padding: 0.3rem 2vw !important;
-    background: #f7f7f7 !important;
   }
 
-  /* Show ALL links on desktop */
   header .nav-utility-links a {
     display: inline !important;
     font-size: 0.7rem !important;
-    color: #444 !important;
   }
 
   header .nav-divider {
@@ -325,7 +335,6 @@ header #nav[aria-expanded="true"] .nav-search {
     border-left: 1px solid #bbb !important;
   }
 
-  /* Main bar desktop */
   header .nav-main-bar {
     padding: 0.5rem 2vw !important;
     min-height: 64px !important;
@@ -335,7 +344,6 @@ header #nav[aria-expanded="true"] .nav-search {
     font-size: 1.9rem !important;
   }
 
-  /* Show nav on desktop */
   header .nav-sections {
     display: flex !important;
     position: static !important;
@@ -376,7 +384,6 @@ header #nav[aria-expanded="true"] .nav-search {
     border: none !important;
     cursor: pointer !important;
     white-space: nowrap !important;
-    letter-spacing: 0.02em !important;
     text-transform: uppercase !important;
   }
 
@@ -414,35 +421,4 @@ header #nav[aria-expanded="true"] .nav-search {
   header .nav-hamburger {
     display: none !important;
   }
-}
-
-
-
-/* Close button X - always in DOM, toggled by aria-expanded */
-header .nav-close-icon {
-  display: none !important;
-  font-size: 1.6rem !important;
-  line-height: 1 !important;
-  color: #333 !important;
-  font-weight: 300 !important;
-  width: 24px !important;
-  height: 24px !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-header #nav[aria-expanded="true"] .nav-hamburger-icon {
-  display: none !important;
-}
-
-header #nav[aria-expanded="true"] .nav-close-icon {
-  display: flex !important;
-}
-
-header #nav[aria-expanded="true"] .nav-hamburger-icon {
-  display: none !important;
-}
-
-header #nav[aria-expanded="true"] .nav-close-icon {
-  display: block !important;
 }

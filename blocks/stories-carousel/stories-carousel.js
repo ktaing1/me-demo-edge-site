@@ -8,9 +8,7 @@ export default function decorate(block) {
     const attribution = cells[2]?.textContent?.trim() || '';
     const ctaLabel = cells[3]?.textContent?.trim() || '';
     const ctaHref = cells[4]?.querySelector('a')?.href || cells[4]?.textContent?.trim() || '#';
-    return {
-      img, quote, attribution, ctaLabel, ctaHref,
-    };
+    return { img, quote, attribution, ctaLabel, ctaHref };
   });
 
   const total = slides.length;
@@ -24,41 +22,11 @@ export default function decorate(block) {
     aemSection.style.backgroundColor = '#fff';
   }
 
-  // ── Build DOM ─────────────────────────────────────────────
-  const wrapper = document.createElement('div');
-  wrapper.className = 'stories-carousel-section';
-
-  // Prev button
-  const prevBtn = document.createElement('button');
-  prevBtn.type = 'button';
-  prevBtn.className = 'stories-carousel-nav stories-carousel-prev';
-  prevBtn.setAttribute('aria-label', 'Previous stories');
-  prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="15 18 9 12 15 6"/>
-  </svg>`;
-
-  const trackWrap = document.createElement('div');
-  trackWrap.className = 'stories-carousel-track-wrap';
-
-  const track = document.createElement('div');
-  track.className = 'stories-carousel-track';
-
-  // Next button
-  const nextBtn = document.createElement('button');
-  nextBtn.type = 'button';
-  nextBtn.className = 'stories-carousel-nav stories-carousel-next';
-  nextBtn.setAttribute('aria-label', 'Next stories');
-  nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="9 18 15 12 9 6"/>
-  </svg>`;
-
-  // Build cards
-  function buildCard(data, i) {
+  // ── Build a card DOM element ──────────────────────────────
+  function buildCard(data, realIndex) {
     const card = document.createElement('div');
     card.className = 'stories-carousel-card';
-    card.setAttribute('data-index', i);
+    card.setAttribute('data-real-index', realIndex);
 
     const imgWrap = document.createElement('div');
     imgWrap.className = 'stories-carousel-image';
@@ -113,9 +81,59 @@ export default function decorate(block) {
     return card;
   }
 
+  // ── DOM structure ─────────────────────────────────────────
+  const wrapper = document.createElement('div');
+  wrapper.className = 'stories-carousel-section';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.type = 'button';
+  prevBtn.className = 'stories-carousel-nav stories-carousel-prev';
+  prevBtn.setAttribute('aria-label', 'Previous stories');
+  prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>`;
+
+  const trackWrap = document.createElement('div');
+  trackWrap.className = 'stories-carousel-track-wrap';
+
+  const track = document.createElement('div');
+  track.className = 'stories-carousel-track';
+
+  const nextBtn = document.createElement('button');
+  nextBtn.type = 'button';
+  nextBtn.className = 'stories-carousel-nav stories-carousel-next';
+  nextBtn.setAttribute('aria-label', 'Next stories');
+  nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>`;
+
+  // ── Clone-based infinite loop setup ──────────────────────
+  // Layout: [clones of last N slides] [real slides] [clones of first N slides]
+  // N = max visible count (3). We'll prepend 3 clones of the end and
+  // append 3 clones of the start so wrapping always feels seamless.
+  const CLONE_COUNT = 3;
+
+  // Prepend clones of the LAST N real slides
+  for (let i = total - CLONE_COUNT; i < total; i++) {
+    track.appendChild(buildCard(slides[i], i));
+  }
+
+  // Append all real slides
   slides.forEach((data, i) => track.appendChild(buildCard(data, i)));
 
-  // Pagination dots (mobile only via CSS)
+  // Append clones of the FIRST N real slides
+  for (let i = 0; i < CLONE_COUNT; i++) {
+    track.appendChild(buildCard(slides[i], i));
+  }
+
+  // The real slides start at track position CLONE_COUNT
+  // current is always the real-slide index (0 … total-1)
+  // trackIndex = current + CLONE_COUNT
+  let current = 0; // real slide index
+
+  // ── Pagination dots ───────────────────────────────────────
   const dotsWrap = document.createElement('div');
   dotsWrap.className = 'stories-carousel-dots';
   const dots = slides.map((_, i) => {
@@ -135,10 +153,7 @@ export default function decorate(block) {
   block.appendChild(wrapper);
   block.appendChild(dotsWrap);
 
-  // ── Carousel logic ────────────────────────────────────────
-  let current = 0;
-  let isTransitioning = false;
-
+  // ── Helpers ───────────────────────────────────────────────
   function getVisibleCount() {
     const w = window.innerWidth;
     if (w <= 560) return 1;
@@ -154,49 +169,86 @@ export default function decorate(block) {
   }
 
   function updateDots() {
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('is-active', i === current);
-    });
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
   }
 
-  function updateStates() {
+  function updateCardStates() {
     const visible = getVisibleCount();
-    [...track.querySelectorAll('.stories-carousel-card')].forEach((card, i) => {
+    const trackIndex = current + CLONE_COUNT;
+    const allCards = [...track.querySelectorAll('.stories-carousel-card')];
+    allCards.forEach((card, i) => {
       card.classList.remove('is-center', 'is-side');
       if (visible === 3) {
-        if (i === current) card.classList.add('is-side');
-        if (i === current + 1) card.classList.add('is-center');
-        if (i === current + 2) card.classList.add('is-side');
+        if (i === trackIndex) card.classList.add('is-side');
+        if (i === trackIndex + 1) card.classList.add('is-center');
+        if (i === trackIndex + 2) card.classList.add('is-side');
       }
     });
-    // Nav buttons: always enabled for infinite loop
-    prevBtn.disabled = false;
-    nextBtn.disabled = false;
-    updateDots();
   }
 
-  function goTo(index, animate = true) {
-    const visible = getVisibleCount();
-    // Wrap around: infinite loop
-    if (index < 0) {
-      index = total - visible;
-    } else if (index > total - visible) {
-      index = 0;
-    }
-    current = index;
-    if (!animate) {
+  // Move track to position for a given real slide index, with animation toggle
+  function setTrackPosition(animated) {
+    const trackIndex = current + CLONE_COUNT;
+    const offset = trackIndex * getCardWidth();
+    if (!animated) {
       track.style.transition = 'none';
     } else {
       track.style.transition = '';
     }
-    track.style.transform = `translateX(-${current * getCardWidth()}px)`;
-    updateStates();
+    track.style.transform = `translateX(-${offset}px)`;
   }
 
-  prevBtn.addEventListener('click', () => { if (!isTransitioning) goTo(current - 1); });
-  nextBtn.addEventListener('click', () => { if (!isTransitioning) goTo(current + 1); });
+  let isBusy = false;
 
-  // ── Touch / swipe support ─────────────────────────────────
+  function goTo(realIndex, animated = true) {
+    if (isBusy) return;
+    current = ((realIndex % total) + total) % total; // safe modulo
+    setTrackPosition(animated);
+    updateCardStates();
+    updateDots();
+  }
+
+  // After a transition ends, silently snap if we've landed on a clone
+  track.addEventListener('transitionend', () => {
+    isBusy = false;
+    const visible = getVisibleCount();
+    const trackIndex = current + CLONE_COUNT;
+    const totalCards = total + CLONE_COUNT * 2;
+
+    // If we're in the leading clone zone (went backwards past real start)
+    if (trackIndex < CLONE_COUNT) {
+      current = total - visible; // jump to the real end
+      setTrackPosition(false);   // no animation
+      updateCardStates();
+      updateDots();
+    }
+    // If we're in the trailing clone zone (went forwards past real end)
+    else if (trackIndex >= total + CLONE_COUNT) {
+      current = 0;             // jump to real start
+      setTrackPosition(false);
+      updateCardStates();
+      updateDots();
+    }
+
+    // Force reflow so the no-animation snap takes effect before re-enabling transitions
+    // eslint-disable-next-line no-unused-expressions
+    track.offsetHeight;
+    track.style.transition = '';
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (isBusy) return;
+    isBusy = true;
+    goTo(current - 1);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (isBusy) return;
+    isBusy = true;
+    goTo(current + 1);
+  });
+
+  // ── Touch / swipe ─────────────────────────────────────────
   let touchStartX = 0;
   let touchStartY = 0;
   let isDragging = false;
@@ -211,10 +263,7 @@ export default function decorate(block) {
     if (!isDragging) return;
     const dx = e.touches[0].clientX - touchStartX;
     const dy = e.touches[0].clientY - touchStartY;
-    // Only prevent scroll if horizontal swipe is dominant
-    if (Math.abs(dx) > Math.abs(dy)) {
-      e.preventDefault();
-    }
+    if (Math.abs(dx) > Math.abs(dy)) e.preventDefault();
   }, { passive: false });
 
   trackWrap.addEventListener('touchend', (e) => {
@@ -222,13 +271,9 @@ export default function decorate(block) {
     isDragging = false;
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
-    // Only trigger swipe if horizontal movement dominates and exceeds threshold
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      if (dx < 0) {
-        goTo(current + 1); // swipe left = next
-      } else {
-        goTo(current - 1); // swipe right = prev
-      }
+      isBusy = true;
+      goTo(dx < 0 ? current + 1 : current - 1);
     }
   }, { passive: true });
 
@@ -236,8 +281,12 @@ export default function decorate(block) {
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => goTo(current), 100);
+    resizeTimer = setTimeout(() => {
+      setTrackPosition(false);
+      updateCardStates();
+    }, 100);
   });
 
-  goTo(0);
+  // ── Init ──────────────────────────────────────────────────
+  goTo(0, false);
 }

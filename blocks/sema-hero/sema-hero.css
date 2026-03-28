@@ -1,0 +1,17 @@
+/* ── sema-hero ────────────────────────────────────────────── */
+.sema-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; background: #e8f4fb; }
+.sema-hero-content { padding: 60px 48px; display: flex; flex-direction: column; justify-content: center; }
+.sema-hero-content h1 { font-size: 2.2rem; font-weight: 900; color: #003087; line-height: 1.2; margin: 0 0 24px; }
+.sema-hero-content p { font-size: 1rem; color: #222; line-height: 1.65; margin: 0 0 16px; }
+.sema-hero-content a { color: #003087; font-weight: 700; }
+.sema-hero-content .button, .sema-hero-content a.button { display: inline-block; background: #003087; color: #fff; padding: 12px 28px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-top: 8px; transition: background 0.2s; }
+.sema-hero-content .button:hover { background: #00226b; }
+.sema-hero-image { position: relative; overflow: hidden; }
+.sema-hero-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sema-hero-caption { position: absolute; bottom: 12px; right: 16px; font-size: 0.75rem; color: #fff; background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 3px; margin: 0; }
+@media (max-width: 768px) {
+  .sema-hero { grid-template-columns: 1fr; }
+  .sema-hero-content { padding: 32px 20px; }
+  .sema-hero-content h1 { font-size: 1.6rem; }
+  .sema-hero-image { min-height: 260px; }
+}

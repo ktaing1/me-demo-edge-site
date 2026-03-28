@@ -1,7 +1,7 @@
 /* ============================================================
-   stories-carousel — v7
-   Updates: pill CTA (120px radius), pagination dots, swipe,
-            infinite loop, white background fix
+   stories-carousel — v8
+   Clone-based infinite loop, 24px card radius, pill CTA,
+   pagination dots, swipe support
    ============================================================ */
 
 /* ── Force white on block + AEM section wrapper ──────────── */
@@ -51,11 +51,6 @@
   display: block;
 }
 
-.stories-carousel-nav:disabled {
-  opacity: 0.2;
-  cursor: default;
-}
-
 .stories-carousel-nav:not(:disabled):hover {
   opacity: 0.65;
 }
@@ -69,28 +64,31 @@
 .stories-carousel-track {
   display: flex;
   gap: 20px;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 
-/* ── Cards — desktop: 3-up ───────────────────────────────── */
+/* ── Cards — 3-up desktop, border-radius: 24px ───────────── */
 .stories-carousel-card {
   flex: 0 0 calc((100% - 40px) / 3);
   background: #fff;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
+/* Center card elevated */
 .stories-carousel-card.is-center {
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
   transform: translateY(-6px);
   position: relative;
   z-index: 2;
 }
 
+/* Side cards slightly dimmed */
 .stories-carousel-card.is-side {
   opacity: 0.85;
 }
@@ -101,6 +99,8 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #ddd;
+  /* Top corners follow card radius */
+  border-radius: 24px 24px 0 0;
 }
 
 .stories-carousel-image img {
@@ -136,10 +136,7 @@
   font-weight: 500;
 }
 
-/* ── CTA button — pill shape (border-radius: 120px) ─────────
-   Matches Ozempic style: inset from card edges, label left,
-   circle-chevron right, bold white text on teal.
-   ──────────────────────────────────────────────────────────── */
+/* ── CTA button — pill shape ─────────────────────────────── */
 .stories-carousel-cta {
   display: inline-flex;
   align-items: center;
@@ -155,7 +152,7 @@
   cursor: pointer;
   color: #ffffff;
   text-align: left;
-  border-radius: 120px;       /* pill shape */
+  border-radius: 120px;
   font-family: inherit;
   transition: background 0.2s ease;
 }
@@ -166,7 +163,7 @@
   color: #ffffff;
 }
 
-/* Center card gets darker teal CTA */
+/* Center card CTA darker */
 .stories-carousel-card.is-center .stories-carousel-cta {
   background: #005f6b;
 }
@@ -183,7 +180,7 @@
   letter-spacing: 0.01em;
 }
 
-/* Circle with chevron — right side */
+/* Circle chevron icon */
 .stories-carousel-cta-icon {
   flex-shrink: 0;
   width: 32px;
@@ -208,11 +205,13 @@
   height: 5px;
   background: linear-gradient(to right, #e8304a, #e6822a, #f5c518, #3ab87a);
   flex-shrink: 0;
+  /* Bottom corners follow card radius */
+  border-radius: 0 0 24px 24px;
 }
 
 /* ── Pagination dots (mobile only) ──────────────────────── */
 .stories-carousel-dots {
-  display: none; /* hidden on desktop */
+  display: none;
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -234,10 +233,10 @@
 
 .stories-carousel-dot.is-active {
   background: #007c89;
-  transform: scale(1.25);
+  transform: scale(1.3);
 }
 
-/* ── Tablet: 2-up (860px matches JS breakpoint) ─────────── */
+/* ── Tablet: 2-up ────────────────────────────────────────── */
 @media (max-width: 860px) {
   .stories-carousel-card {
     flex: 0 0 calc((100% - 20px) / 2);
@@ -247,7 +246,7 @@
   .stories-carousel-card.is-side {
     transform: none;
     opacity: 1;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
   }
 
   .stories-carousel-card.is-center .stories-carousel-cta {
@@ -255,7 +254,7 @@
   }
 }
 
-/* ── Mobile: 1-up (560px matches JS breakpoint) ─────────── */
+/* ── Mobile: 1-up ────────────────────────────────────────── */
 @media (max-width: 560px) {
   .stories-carousel-card {
     flex: 0 0 100%;
@@ -265,10 +264,13 @@
   .stories-carousel-card.is-side {
     transform: none;
     opacity: 1;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
   }
 
-  /* Show nav arrows smaller on mobile */
+  .stories-carousel-card.is-center .stories-carousel-cta {
+    background: #007c89;
+  }
+
   .stories-carousel-nav {
     width: 36px;
     height: 36px;
@@ -280,7 +282,7 @@
     height: 20px;
   }
 
-  /* Show pagination dots on mobile */
+  /* Show dots on mobile */
   .stories-carousel-dots {
     display: flex;
   }

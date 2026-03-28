@@ -1,14 +1,20 @@
 /* ============================================================
-   stories-carousel — v5
-   Responsive: 3-up (desktop) → 2-up (tablet) → 1-up (mobile)
-   All five cards navigable at every breakpoint.
+   stories-carousel — v6
+   Fixes: black section background, CTA button style to match Ozempic
    ============================================================ */
+
+/* ── Force white on block + AEM section wrapper ──────────── */
+.stories-carousel,
+.section:has(.stories-carousel),
+.stories-carousel-wrapper {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
 
 /* ── Block root ──────────────────────────────────────────── */
 .stories-carousel {
   overflow: hidden;
   padding: 48px 0 64px;
-  background: #fff;
 }
 
 /* ── Layout: [nav] [track] [nav] ─────────────────────────── */
@@ -68,7 +74,7 @@
 
 /* ── Cards — desktop: 3-up ───────────────────────────────── */
 .stories-carousel-card {
-  flex: 0 0 calc((100% - 40px) / 3); /* 3 cards, 2 gaps of 20px */
+  flex: 0 0 calc((100% - 40px) / 3);
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -77,7 +83,6 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
-/* Center card elevated */
 .stories-carousel-card.is-center {
   box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
   transform: translateY(-6px);
@@ -85,7 +90,6 @@
   z-index: 2;
 }
 
-/* Side cards slightly dimmed */
 .stories-carousel-card.is-side {
   opacity: 0.85;
 }
@@ -110,6 +114,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: #fff;
 }
 
 .stories-carousel-quote {
@@ -125,19 +130,24 @@
   font-size: 0.875rem;
   color: #555;
   text-align: right;
-  padding: 0 18px 16px;
+  padding: 0 18px 20px;
   margin: 0;
   font-weight: 500;
 }
 
-/* ── CTA button ──────────────────────────────────────────── */
+/* ── CTA button — matches Ozempic exactly ────────────────────
+   - Not full-width flush; has left/right margin inside card
+   - Fixed height, inline-flex, label left + circle-chevron right
+   - Teal background, white text and icon
+   ──────────────────────────────────────────────────────────── */
 .stories-carousel-cta {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: calc(100% - 36px); /* inset from card edges like Ozempic */
+  margin: 0 18px 20px;
   box-sizing: border-box;
-  padding: 15px 18px;
+  padding: 14px 16px;
   background: #007c89;
   border: none;
   outline: none;
@@ -145,8 +155,7 @@
   cursor: pointer;
   color: #ffffff;
   text-align: left;
-  border-radius: 0;
-  margin: 0;
+  border-radius: 2px;
   font-family: inherit;
   transition: background 0.2s ease;
 }
@@ -157,6 +166,15 @@
   color: #ffffff;
 }
 
+/* Center card CTA is darker / more prominent */
+.stories-carousel-card.is-center .stories-carousel-cta {
+  background: #005f6b;
+}
+
+.stories-carousel-card.is-center .stories-carousel-cta:hover {
+  background: #004a55;
+}
+
 .stories-carousel-cta-label {
   font-weight: 700;
   font-size: 1rem;
@@ -165,10 +183,11 @@
   letter-spacing: 0.01em;
 }
 
+/* Circle with chevron — right side */
 .stories-carousel-cta-icon {
   flex-shrink: 0;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid #ffffff;
   display: flex;
@@ -178,8 +197,8 @@
 }
 
 .stories-carousel-cta-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   display: block;
   stroke: #ffffff;
 }
@@ -191,25 +210,28 @@
   flex-shrink: 0;
 }
 
-/* ── Tablet: 2-up (must match JS breakpoint: 860px) ─────── */
+/* ── Tablet: 2-up ────────────────────────────────────────── */
 @media (max-width: 860px) {
   .stories-carousel-card {
-    flex: 0 0 calc((100% - 20px) / 2); /* 2 cards, 1 gap of 20px */
+    flex: 0 0 calc((100% - 20px) / 2);
   }
 
-  /* No center/side treatment at 2-up */
   .stories-carousel-card.is-center,
   .stories-carousel-card.is-side {
     transform: none;
     opacity: 1;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
+
+  .stories-carousel-card.is-center .stories-carousel-cta {
+    background: #007c89;
+  }
 }
 
-/* ── Mobile: 1-up (must match JS breakpoint: 560px) ─────── */
+/* ── Mobile: 1-up ────────────────────────────────────────── */
 @media (max-width: 560px) {
   .stories-carousel-card {
-    flex: 0 0 100%; /* 1 card, full width */
+    flex: 0 0 100%;
   }
 
   .stories-carousel-card.is-center,

@@ -1,0 +1,28 @@
+/* ── sema-accordion (ISI sticky footer) ──────────────────── */
+.sema-accordion { border-top: 2px solid #003087; background: #fff; }
+.sema-accordion-item { border-bottom: 1px solid #dde3ef; }
+.sema-accordion-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: none; border: none; cursor: pointer; text-align: left; font-family: inherit; }
+.sema-accordion-heading { font-size: 0.95rem; font-weight: 700; color: #003087; line-height: 1.4; }
+.sema-accordion-icon svg { width: 20px; height: 20px; stroke: #003087; display: block; transition: transform 0.25s ease; }
+.sema-accordion-panel { padding: 0 40px 24px; font-size: 0.85rem; line-height: 1.7; color: #222; }
+.sema-accordion-panel p { margin: 0 0 10px; }
+.sema-accordion-panel ul { padding-left: 20px; margin: 0 0 10px; }
+.sema-accordion-panel li { margin-bottom: 6px; }
+.sema-accordion-panel a { color: #003087; }
+.sema-accordion-panel h2, .sema-accordion-panel h3 { font-size: 0.92rem; font-weight: 700; color: #003087; margin: 16px 0 6px; }
+
+/* Sticky ISI footer variant — add class "sticky" to the section */
+.section.sema-accordion-container.sticky {
+  position: sticky;
+  bottom: 0;
+  z-index: 90;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+  max-height: 185px;
+  overflow-y: auto;
+  transition: max-height 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .sema-accordion-trigger { padding: 14px 16px; }
+  .sema-accordion-panel { padding: 0 16px 20px; }
+}

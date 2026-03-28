@@ -16,7 +16,7 @@ export default function decorate(block) {
   // Col 0 = logo image
   const logoWrap = document.createElement('div');
   logoWrap.className = 'sema-header-logo';
-  const img = cells[0]?.querySelector('img');
+  const img = cells[1]?.querySelector('img');
   if (img) {
     img.setAttribute('loading', 'eager');
     img.alt = img.alt || 'Novo Nordisk';

@@ -1,10 +1,12 @@
-/* ── sema-hero ────────────────────────────────────────────── */
-.sema-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; background: #e8f4fb; }
+/* sema-hero */
+.sema-hero { font-family: Arial, Helvetica, sans-serif !important; display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; background: #e8f4fb; }
+.sema-hero * { font-family: Arial, Helvetica, sans-serif !important; box-sizing: border-box; }
+.sema-hero a, .sema-hero a:visited { color: #003087 !important; }
 .sema-hero-content { padding: 60px 48px; display: flex; flex-direction: column; justify-content: center; }
-.sema-hero-content h1 { font-size: 2.2rem; font-weight: 900; color: #003087; line-height: 1.2; margin: 0 0 24px; }
-.sema-hero-content p { font-size: 1rem; color: #222; line-height: 1.65; margin: 0 0 16px; }
-.sema-hero-content a { color: #003087; font-weight: 700; }
-.sema-hero-content .button, .sema-hero-content a.button { display: inline-block; background: #003087; color: #fff; padding: 12px 28px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-top: 8px; transition: background 0.2s; }
+.sema-hero-content h1 { font-size: 2.2rem !important; font-weight: 900 !important; color: #003087 !important; line-height: 1.2; margin: 0 0 24px; }
+.sema-hero-content p { font-size: 1rem; color: #222 !important; line-height: 1.65; margin: 0 0 16px; }
+.sema-hero-content .button,
+.sema-hero-content a.button { display: inline-block; background: #003087; color: #fff !important; padding: 12px 28px; border-radius: 40px; font-weight: 700; text-decoration: none !important; margin-top: 8px; transition: background 0.2s; }
 .sema-hero-content .button:hover { background: #00226b; }
 .sema-hero-image { position: relative; overflow: hidden; }
 .sema-hero-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -12,6 +14,6 @@
 @media (max-width: 768px) {
   .sema-hero { grid-template-columns: 1fr; }
   .sema-hero-content { padding: 32px 20px; }
-  .sema-hero-content h1 { font-size: 1.6rem; }
+  .sema-hero-content h1 { font-size: 1.6rem !important; }
   .sema-hero-image { min-height: 260px; }
 }

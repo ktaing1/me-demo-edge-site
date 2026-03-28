@@ -31,7 +31,7 @@ export default function decorate(block) {
   const descEl = document.createElement('div');
   descEl.className = 'sema-header-descriptor';
   if (cells[1]) {
-    const lines = cells[1].innerText.split('\n').map((l) => l.trim()).filter(Boolean);
+    const lines = cells[2].innerText.split('\n').map((l) => l.trim()).filter(Boolean);
     lines.forEach((line) => {
       const p = document.createElement('p');
       p.textContent = line;
@@ -49,7 +49,7 @@ export default function decorate(block) {
   nav.className = 'sema-header-nav';
   nav.setAttribute('aria-label', 'Primary navigation');
 
-  if (cells[2]) {
+  if (cells[3]) {
     const anchors = [...cells[2].querySelectorAll('a')];
     if (anchors.length) {
       anchors.forEach((a) => {
@@ -60,7 +60,7 @@ export default function decorate(block) {
       });
     } else {
       // plain text e.g. "Patient Safety | Our Medicines"
-      cells[2].innerText.split('|').map((s) => s.trim()).filter(Boolean).forEach((label) => {
+      cells[3].innerText.split('|').map((s) => s.trim()).filter(Boolean).forEach((label) => {
         const link = document.createElement('a');
         link.href = '#';
         link.textContent = label;

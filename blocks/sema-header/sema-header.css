@@ -1,0 +1,14 @@
+/* ── sema-header ─────────────────────────────────────────── */
+.sema-header { font-family: Arial, sans-serif; border-bottom: 1px solid #e0e0e0; background: #fff; position: sticky; top: 0; z-index: 100; }
+.sema-header-utility { background: #f5f5f5; padding: 6px 40px; font-size: 0.75rem; color: #444; display: flex; justify-content: flex-end; gap: 16px; border-bottom: 1px solid #e0e0e0; flex-wrap: wrap; }
+.sema-header-utility a { color: #003087; text-decoration: none; }
+.sema-header-utility a:hover { text-decoration: underline; }
+.sema-header-nav-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 40px; max-width: 1280px; margin: 0 auto; }
+.sema-header-logo img { height: 56px; width: auto; display: block; }
+.sema-header-nav { display: flex; gap: 32px; margin: 0; padding: 0; }
+.sema-header-nav a { color: #003087; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
+.sema-header-nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
+  .sema-header-nav-row { flex-direction: column; gap: 12px; padding: 12px 16px; }
+  .sema-header-utility { padding: 6px 16px; }
+}

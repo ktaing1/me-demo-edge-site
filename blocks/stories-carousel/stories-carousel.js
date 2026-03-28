@@ -23,10 +23,9 @@ export default function decorate(block) {
   }
 
   // ── Build a card DOM element ──────────────────────────────
-  function buildCard(data, realIndex) {
+  function buildCard(data) {
     const card = document.createElement('div');
     card.className = 'stories-carousel-card';
-    card.setAttribute('data-real-index', realIndex);
 
     const imgWrap = document.createElement('div');
     imgWrap.className = 'stories-carousel-image';
@@ -109,29 +108,17 @@ export default function decorate(block) {
     <polyline points="9 18 15 12 9 6"/>
   </svg>`;
 
-  // ── Clone-based infinite loop setup ──────────────────────
-  // Layout: [clones of last N slides] [real slides] [clones of first N slides]
-  // N = max visible count (3). We'll prepend 3 clones of the end and
-  // append 3 clones of the start so wrapping always feels seamless.
+  // ── Clone-based infinite loop ─────────────────────────────
+  // Layout: [clone last 3] [real slides] [clone first 3]
   const CLONE_COUNT = 3;
 
-  // Prepend clones of the LAST N real slides
   for (let i = total - CLONE_COUNT; i < total; i++) {
-    track.appendChild(buildCard(slides[i], i));
+    track.appendChild(buildCard(slides[i]));
   }
-
-  // Append all real slides
-  slides.forEach((data, i) => track.appendChild(buildCard(data, i)));
-
-  // Append clones of the FIRST N real slides
+  slides.forEach((data) => track.appendChild(buildCard(data)));
   for (let i = 0; i < CLONE_COUNT; i++) {
-    track.appendChild(buildCard(slides[i], i));
+    track.appendChild(buildCard(slides[i]));
   }
-
-  // The real slides start at track position CLONE_COUNT
-  // current is always the real-slide index (0 … total-1)
-  // trackIndex = current + CLONE_COUNT
-  let current = 0; // real slide index
 
   // ── Pagination dots ───────────────────────────────────────
   const dotsWrap = document.createElement('div');
@@ -153,7 +140,11 @@ export default function decorate(block) {
   block.appendChild(wrapper);
   block.appendChild(dotsWrap);
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ── State ─────────────────────────────────────────────────
+  let current = 0;
+  let isBusy = false;
+  let busyTimer = null;
+
   function getVisibleCount() {
     const w = window.innerWidth;
     if (w <= 560) return 1;
@@ -175,8 +166,7 @@ export default function decorate(block) {
   function updateCardStates() {
     const visible = getVisibleCount();
     const trackIndex = current + CLONE_COUNT;
-    const allCards = [...track.querySelectorAll('.stories-carousel-card')];
-    allCards.forEach((card, i) => {
+    [...track.querySelectorAll('.stories-carousel-card')].forEach((card, i) => {
       card.classList.remove('is-center', 'is-side');
       if (visible === 3) {
         if (i === trackIndex) card.classList.add('is-side');
@@ -186,93 +176,95 @@ export default function decorate(block) {
     });
   }
 
-  // Move track to position for a given real slide index, with animation toggle
-  function setTrackPosition(animated) {
-    const trackIndex = current + CLONE_COUNT;
-    const offset = trackIndex * getCardWidth();
-    if (!animated) {
-      track.style.transition = 'none';
-    } else {
+  // Move track to current position.
+  // animated=false: instant snap (no transition), used for init + wrap-around.
+  function snapTo(animated) {
+    const offset = (current + CLONE_COUNT) * getCardWidth();
+    if (animated) {
       track.style.transition = '';
+    } else {
+      track.style.transition = 'none';
     }
     track.style.transform = `translateX(-${offset}px)`;
   }
 
-  let isBusy = false;
-
-  function goTo(realIndex, animated = true) {
-    if (isBusy) return;
-    current = ((realIndex % total) + total) % total; // safe modulo
-    setTrackPosition(animated);
-    updateCardStates();
-    updateDots();
+  function releaseBusy() {
+    isBusy = false;
+    clearTimeout(busyTimer);
   }
 
-  // After a transition ends, silently snap if we've landed on a clone
-  track.addEventListener('transitionend', () => {
-    isBusy = false;
-    const visible = getVisibleCount();
+  function goTo(realIndex) {
+    if (isBusy) return;
+    isBusy = true;
+
+    // Clamp to real slide range (wrap handled by transitionend)
+    current = ((realIndex % total) + total) % total;
+
+    snapTo(true);
+    updateCardStates();
+    updateDots();
+
+    // Safety valve: if transitionend somehow never fires, release after 600ms
+    busyTimer = setTimeout(releaseBusy, 600);
+  }
+
+  // After each animated transition: release busy, and silently snap
+  // if we've landed in clone territory.
+  track.addEventListener('transitionend', (e) => {
+    // Only care about the transform transition on the track itself
+    if (e.target !== track || e.propertyName !== 'transform') return;
+
+    releaseBusy();
+
     const trackIndex = current + CLONE_COUNT;
-    const totalCards = total + CLONE_COUNT * 2;
 
-    // If we're in the leading clone zone (went backwards past real start)
     if (trackIndex < CLONE_COUNT) {
-      current = total - visible; // jump to the real end
-      setTrackPosition(false);   // no animation
+      // Went backwards past real start — jump to real end
+      current = total - getVisibleCount();
+      snapTo(false);
       updateCardStates();
       updateDots();
-    }
-    // If we're in the trailing clone zone (went forwards past real end)
-    else if (trackIndex >= total + CLONE_COUNT) {
-      current = 0;             // jump to real start
-      setTrackPosition(false);
+    } else if (trackIndex >= total + CLONE_COUNT) {
+      // Went forwards past real end — jump to real start
+      current = 0;
+      snapTo(false);
       updateCardStates();
       updateDots();
     }
 
-    // Force reflow so the no-animation snap takes effect before re-enabling transitions
+    // Force reflow so the snap registers before re-enabling CSS transition
     // eslint-disable-next-line no-unused-expressions
     track.offsetHeight;
     track.style.transition = '';
   });
 
-  prevBtn.addEventListener('click', () => {
-    if (isBusy) return;
-    isBusy = true;
-    goTo(current - 1);
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if (isBusy) return;
-    isBusy = true;
-    goTo(current + 1);
-  });
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
 
   // ── Touch / swipe ─────────────────────────────────────────
   let touchStartX = 0;
   let touchStartY = 0;
-  let isDragging = false;
+  let dragging = false;
 
   trackWrap.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
-    isDragging = true;
+    dragging = true;
   }, { passive: true });
 
   trackWrap.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
+    if (!dragging) return;
     const dx = e.touches[0].clientX - touchStartX;
     const dy = e.touches[0].clientY - touchStartY;
     if (Math.abs(dx) > Math.abs(dy)) e.preventDefault();
   }, { passive: false });
 
   trackWrap.addEventListener('touchend', (e) => {
-    if (!isDragging) return;
-    isDragging = false;
+    if (!dragging) return;
+    dragging = false;
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      isBusy = true;
       goTo(dx < 0 ? current + 1 : current - 1);
     }
   }, { passive: true });
@@ -282,11 +274,25 @@ export default function decorate(block) {
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      setTrackPosition(false);
+      snapTo(false);
       updateCardStates();
+      // Force re-enable transition after snap
+      track.offsetHeight; // eslint-disable-line no-unused-expressions
+      track.style.transition = '';
     }, 100);
   });
 
-  // ── Init ──────────────────────────────────────────────────
-  goTo(0, false);
+  // ── Init: silent snap to slide 0, then re-enable transitions ─
+  // Use double rAF so the browser paints the initial position
+  // before turning transitions back on. This prevents the
+  // "transition: none stuck forever" bug.
+  snapTo(false);
+  updateCardStates();
+  updateDots();
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      track.style.transition = '';
+    });
+  });
 }

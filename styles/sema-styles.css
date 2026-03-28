@@ -1,24 +1,27 @@
 /* ============================================================
-   sema-styles.css
-   Place in /styles/sema-styles.css in your repo.
-
-   PURPOSE: Full isolation of sema- blocks from the
-   me-demo-edge-site global styles which set:
-     - --link-color: #ff5000  (orange links)
-     - body { font-family: Times }
-     - main { overflow-x: hidden }
-     - h1-h6 font sizes / colors
-     - Global <a> color via var(--link-color)
-     - Nav height offset via --nav-height: 95px
-
-   HOW TO USE:
-   Add this to the <head> of your sema page via metadata:
-     | Metadata   |            |
-     | stylesheet | /styles/sema-styles.css |
-   OR reference it in the page's scripts.js override.
+   sema-styles.css  →  place at /styles/sema-styles.css
+   Loaded by scripts.js for pages with template: sema
    ============================================================ */
 
-/* ── Sema design tokens ─────────────────────────────────── */
+/* ── 1. Hide the site's global nav and footer ────────────── */
+body.sema-page > header,
+body.sema-page header.header-wrapper,
+body.sema-page header.nav-wrapper {
+  display: none !important;
+}
+
+body.sema-page > footer {
+  display: none !important;
+}
+
+/* ── 2. Remove the nav-height top offset AEM adds to main ── */
+body.sema-page main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  overflow-x: visible !important;
+}
+
+/* ── 3. Sema design tokens ───────────────────────────────── */
 :root {
   --sema-navy:        #003087;
   --sema-navy-dark:   #00226b;
@@ -30,81 +33,64 @@
   --sema-text-muted:  #555555;
   --sema-border:      #b0bec5;
   --sema-font:        Arial, Helvetica, sans-serif;
-  --sema-radius-pill: 40px;
-  --sema-radius-md:   8px;
 }
 
-/* ── Hide site header + footer on sema pages ────────────── */
-/*
-  AEM EDS renders the site nav as .nav-wrapper inside <header>
-  and the footer as <footer>. On sema- pages we want our own
-  sema-header and sema-footer instead.
-  These are hidden by sema-page.js at runtime, but this CSS
-  provides an instant flash-of-content prevention.
-*/
-body.sema-page header.nav-wrapper,
-body.sema-page > header,
-body.sema-page > footer {
-  display: none !important;
+/* ── 4. Font reset — override site's Times body font ────── */
+body.sema-page .sema-header,
+body.sema-page .sema-alert-banner,
+body.sema-page .sema-hero,
+body.sema-page .sema-promo,
+body.sema-page .sema-video-embed,
+body.sema-page .sema-card-grid-section,
+body.sema-page .sema-accordion,
+body.sema-page .sema-footer {
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
-/* Remove the nav-height top offset that AEM EDS adds to <main> */
-body.sema-page main {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  overflow-x: visible !important; /* Fix card clipping */
+body.sema-page .sema-header *,
+body.sema-page .sema-alert-banner *,
+body.sema-page .sema-hero *,
+body.sema-page .sema-promo *,
+body.sema-page .sema-video-embed *,
+body.sema-page .sema-card-grid-section *,
+body.sema-page .sema-accordion *,
+body.sema-page .sema-footer * {
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
-/* ── Global reset scoped to all sema- blocks ────────────── */
-/*
-  Every sema- block gets font, color, and link isolation.
-  This single ruleset covers all 8 blocks.
-*/
-.sema-header, .sema-alert-banner, .sema-hero,
-.sema-promo, .sema-video-embed, .sema-card-grid-section,
-.sema-accordion, .sema-footer {
-  font-family: var(--sema-font) !important;
-  color: var(--sema-text);
-  box-sizing: border-box;
-  /* Override site's margin-top from nav-height offset */
-  position: relative;
+/* ── 5. Link color reset — override site's #ff5000 orange ── */
+body.sema-page .sema-header a,
+body.sema-page .sema-alert-banner a,
+body.sema-page .sema-hero a,
+body.sema-page .sema-promo a,
+body.sema-page .sema-video-embed a,
+body.sema-page .sema-card-grid-section a,
+body.sema-page .sema-accordion a,
+body.sema-page .sema-footer a {
+  color: #003087 !important;
+  text-decoration: none;
 }
 
-/* ── Override the site's orange link color inside all sema blocks ── */
-.sema-header a, .sema-alert-banner a, .sema-hero a,
-.sema-promo a, .sema-video-embed a, .sema-card-grid-section a,
-.sema-accordion a, .sema-footer a {
-  color: var(--sema-navy) !important;
-  font-family: var(--sema-font) !important;
+/* ── 6. Heading reset inside sema blocks ─────────────────── */
+body.sema-page .sema-hero h1,
+body.sema-page .sema-promo h2,
+body.sema-page .sema-promo h3,
+body.sema-page .sema-video-embed h2,
+body.sema-page .sema-card-grid-section h2,
+body.sema-page .sema-accordion h2,
+body.sema-page .sema-accordion h3 {
+  color: #003087 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
-/* ── Override heading styles inside all sema blocks ─────── */
-.sema-header h1, .sema-header h2, .sema-header h3, .sema-header h4, .sema-header h5, .sema-header h6,
-.sema-alert-banner h1, .sema-alert-banner h2, .sema-alert-banner h3,
-.sema-hero h1, .sema-hero h2, .sema-hero h3,
-.sema-promo h1, .sema-promo h2, .sema-promo h3,
-.sema-video-embed h1, .sema-video-embed h2, .sema-video-embed h3,
-.sema-card-grid-section h1, .sema-card-grid-section h2, .sema-card-grid-section h3,
-.sema-accordion h1, .sema-accordion h2, .sema-accordion h3,
-.sema-footer h1, .sema-footer h2, .sema-footer h3 {
-  font-family: var(--sema-font) !important;
-  color: var(--sema-navy) !important;
-  margin: 0;
-}
-
-/* ── Override paragraph + list styles ───────────────────── */
-.sema-header p, .sema-alert-banner p, .sema-hero p,
-.sema-promo p, .sema-video-embed p, .sema-card-grid-section p,
-.sema-accordion p, .sema-footer p,
-.sema-header li, .sema-alert-banner li, .sema-hero li,
-.sema-promo li, .sema-video-embed li, .sema-card-grid-section li,
-.sema-accordion li, .sema-footer li {
-  font-family: var(--sema-font) !important;
-}
-
-/* ── Override button styles (AEM may reset them) ─────────── */
-.sema-header button, .sema-alert-banner button, .sema-hero button,
-.sema-promo button, .sema-video-embed button, .sema-card-grid-section button,
-.sema-accordion button, .sema-footer button {
-  font-family: var(--sema-font) !important;
+/* ── 7. Button reset — override site button styles ───────── */
+body.sema-page .sema-promo .button,
+body.sema-page .sema-hero .button,
+body.sema-page .sema-video-embed .button {
+  background: #003087 !important;
+  color: #fff !important;
+  border-radius: 40px !important;
+  text-decoration: none !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  border: none !important;
 }

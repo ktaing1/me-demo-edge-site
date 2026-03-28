@@ -73,8 +73,7 @@ export default function decorate(block) {
     content.appendChild(quoteEl);
     content.appendChild(attrEl);
 
-    // ── CTA: use <button role="link"> to dodge AEM's global <a> color rules ──
-    // A <button> has no inherited link color, so white text just works.
+    // CTA as <button> to avoid AEM global <a> color overrides
     const ctaBtn = document.createElement('button');
     ctaBtn.type = 'button';
     ctaBtn.className = 'stories-carousel-cta';
@@ -84,9 +83,9 @@ export default function decorate(block) {
       window.location.href = data.ctaHref;
     });
 
-    const ctaLabel = document.createElement('span');
-    ctaLabel.className = 'stories-carousel-cta-label';
-    ctaLabel.textContent = data.ctaLabel;
+    const ctaLabelEl = document.createElement('span');
+    ctaLabelEl.className = 'stories-carousel-cta-label';
+    ctaLabelEl.textContent = data.ctaLabel;
 
     const ctaIcon = document.createElement('span');
     ctaIcon.className = 'stories-carousel-cta-icon';
@@ -95,7 +94,7 @@ export default function decorate(block) {
       <polyline points="9 18 15 12 9 6"/>
     </svg>`;
 
-    ctaBtn.appendChild(ctaLabel);
+    ctaBtn.appendChild(ctaLabelEl);
     ctaBtn.appendChild(ctaIcon);
 
     // Rainbow bar
@@ -116,8 +115,17 @@ export default function decorate(block) {
   block.appendChild(section);
 
   // ── Carousel logic ────────────────────────────────────────
-  const VISIBLE = 3;
+
   let current = 0;
+
+  // Returns how many cards are visible at the current viewport width.
+  // Must stay in sync with the CSS breakpoints.
+  function getVisibleCount() {
+    const w = window.innerWidth;
+    if (w <= 560) return 1;
+    if (w <= 860) return 2;
+    return 3;
+  }
 
   function getCardWidth() {
     const card = track.querySelector('.stories-carousel-card');
@@ -127,18 +135,26 @@ export default function decorate(block) {
   }
 
   function updateStates() {
+    const visible = getVisibleCount();
     [...track.querySelectorAll('.stories-carousel-card')].forEach((card, i) => {
       card.classList.remove('is-center', 'is-side');
-      if (i === current) card.classList.add('is-side');
-      if (i === current + 1) card.classList.add('is-center');
-      if (i === current + 2) card.classList.add('is-side');
+      // Mark cards in the visible window
+      if (i >= current && i < current + visible) {
+        if (visible === 3 && i === current + 1) {
+          card.classList.add('is-center');
+        } else if (visible === 3) {
+          card.classList.add('is-side');
+        }
+        // For 1 or 2 visible, no center/side treatment needed
+      }
     });
     prevBtn.disabled = current === 0;
-    nextBtn.disabled = current >= slides.length - VISIBLE;
+    nextBtn.disabled = current >= slides.length - visible;
   }
 
   function goTo(index) {
-    const maxIndex = Math.max(0, slides.length - VISIBLE);
+    const visible = getVisibleCount();
+    const maxIndex = Math.max(0, slides.length - visible);
     current = Math.max(0, Math.min(index, maxIndex));
     track.style.transform = `translateX(-${current * getCardWidth()}px)`;
     updateStates();
@@ -147,6 +163,15 @@ export default function decorate(block) {
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
 
+  // On resize: recalculate position in case breakpoint changed
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      // Clamp current to new max so we don't get stuck off-screen
+      goTo(current);
+    }, 100);
+  });
+
   goTo(0);
-  window.addEventListener('resize', () => goTo(current));
 }

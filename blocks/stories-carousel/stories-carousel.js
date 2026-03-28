@@ -13,16 +13,18 @@ export default function decorate(block) {
     };
   });
 
+  const total = slides.length;
   block.textContent = '';
 
-  // Force white background on the block and its AEM section parent
+  // Force white background on block + AEM section parent
   block.style.background = '#fff';
-  const section = block.closest('.section');
-  if (section) {
-    section.style.background = '#fff';
-    section.style.backgroundColor = '#fff';
+  const aemSection = block.closest('.section');
+  if (aemSection) {
+    aemSection.style.background = '#fff';
+    aemSection.style.backgroundColor = '#fff';
   }
 
+  // ── Build DOM ─────────────────────────────────────────────
   const wrapper = document.createElement('div');
   wrapper.className = 'stories-carousel-section';
 
@@ -52,12 +54,12 @@ export default function decorate(block) {
     <polyline points="9 18 15 12 9 6"/>
   </svg>`;
 
-  slides.forEach((data, i) => {
+  // Build cards
+  function buildCard(data, i) {
     const card = document.createElement('div');
     card.className = 'stories-carousel-card';
     card.setAttribute('data-index', i);
 
-    // Image
     const imgWrap = document.createElement('div');
     imgWrap.className = 'stories-carousel-image';
     if (data.img) {
@@ -66,7 +68,6 @@ export default function decorate(block) {
       imgWrap.appendChild(clonedImg);
     }
 
-    // Text content
     const content = document.createElement('div');
     content.className = 'stories-carousel-content';
 
@@ -81,15 +82,12 @@ export default function decorate(block) {
     content.appendChild(quoteEl);
     content.appendChild(attrEl);
 
-    // CTA as <button> — avoids AEM global <a> color overrides
     const ctaBtn = document.createElement('button');
     ctaBtn.type = 'button';
     ctaBtn.className = 'stories-carousel-cta';
     ctaBtn.setAttribute('role', 'link');
     ctaBtn.setAttribute('aria-label', data.ctaLabel);
-    ctaBtn.addEventListener('click', () => {
-      window.location.href = data.ctaHref;
-    });
+    ctaBtn.addEventListener('click', () => { window.location.href = data.ctaHref; });
 
     const ctaLabelEl = document.createElement('span');
     ctaLabelEl.className = 'stories-carousel-cta-label';
@@ -105,7 +103,6 @@ export default function decorate(block) {
     ctaBtn.appendChild(ctaLabelEl);
     ctaBtn.appendChild(ctaIcon);
 
-    // Rainbow bar
     const bar = document.createElement('div');
     bar.className = 'stories-carousel-bar';
 
@@ -113,7 +110,22 @@ export default function decorate(block) {
     card.appendChild(content);
     card.appendChild(ctaBtn);
     card.appendChild(bar);
-    track.appendChild(card);
+    return card;
+  }
+
+  slides.forEach((data, i) => track.appendChild(buildCard(data, i)));
+
+  // Pagination dots (mobile only via CSS)
+  const dotsWrap = document.createElement('div');
+  dotsWrap.className = 'stories-carousel-dots';
+  const dots = slides.map((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'stories-carousel-dot';
+    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+    return dot;
   });
 
   trackWrap.appendChild(track);
@@ -121,9 +133,11 @@ export default function decorate(block) {
   wrapper.appendChild(trackWrap);
   wrapper.appendChild(nextBtn);
   block.appendChild(wrapper);
+  block.appendChild(dotsWrap);
 
   // ── Carousel logic ────────────────────────────────────────
   let current = 0;
+  let isTransitioning = false;
 
   function getVisibleCount() {
     const w = window.innerWidth;
@@ -139,6 +153,12 @@ export default function decorate(block) {
     return card.offsetWidth + gap;
   }
 
+  function updateDots() {
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === current);
+    });
+  }
+
   function updateStates() {
     const visible = getVisibleCount();
     [...track.querySelectorAll('.stories-carousel-card')].forEach((card, i) => {
@@ -149,21 +169,70 @@ export default function decorate(block) {
         if (i === current + 2) card.classList.add('is-side');
       }
     });
-    prevBtn.disabled = current === 0;
-    nextBtn.disabled = current >= slides.length - visible;
+    // Nav buttons: always enabled for infinite loop
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+    updateDots();
   }
 
-  function goTo(index) {
+  function goTo(index, animate = true) {
     const visible = getVisibleCount();
-    const maxIndex = Math.max(0, slides.length - visible);
-    current = Math.max(0, Math.min(index, maxIndex));
+    // Wrap around: infinite loop
+    if (index < 0) {
+      index = total - visible;
+    } else if (index > total - visible) {
+      index = 0;
+    }
+    current = index;
+    if (!animate) {
+      track.style.transition = 'none';
+    } else {
+      track.style.transition = '';
+    }
     track.style.transform = `translateX(-${current * getCardWidth()}px)`;
     updateStates();
   }
 
-  prevBtn.addEventListener('click', () => goTo(current - 1));
-  nextBtn.addEventListener('click', () => goTo(current + 1));
+  prevBtn.addEventListener('click', () => { if (!isTransitioning) goTo(current - 1); });
+  nextBtn.addEventListener('click', () => { if (!isTransitioning) goTo(current + 1); });
 
+  // ── Touch / swipe support ─────────────────────────────────
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isDragging = false;
+
+  trackWrap.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isDragging = true;
+  }, { passive: true });
+
+  trackWrap.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    // Only prevent scroll if horizontal swipe is dominant
+    if (Math.abs(dx) > Math.abs(dy)) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  trackWrap.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only trigger swipe if horizontal movement dominates and exceeds threshold
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) {
+        goTo(current + 1); // swipe left = next
+      } else {
+        goTo(current - 1); // swipe right = prev
+      }
+    }
+  }, { passive: true });
+
+  // ── Resize ────────────────────────────────────────────────
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);

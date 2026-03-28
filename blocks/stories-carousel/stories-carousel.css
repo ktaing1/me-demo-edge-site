@@ -1,9 +1,9 @@
 /* ============================================================
    stories-carousel — v11
-   Fix confirmed via live browser inspection:
-   - overflow:hidden moved to track-wrap only (not block)
-   - track-wrap uses padding + negative margin on ALL 4 sides
-     so card box-shadows and border-radius show fully
+   Root cause: AEM's global main { overflow-x: hidden } clips
+   any bleed outside the main container. Fix: add padding-left
+   to the track itself so the first card is inset from the edge.
+   JS subtracts this padding from the offset calc to compensate.
    ============================================================ */
 
 /* ── Force white on block + AEM section wrapper ──────────── */
@@ -14,7 +14,7 @@
   background-color: #ffffff !important;
 }
 
-/* ── Block root — NO overflow:hidden ─────────────────────── */
+/* ── Block root ──────────────────────────────────────────── */
 .stories-carousel {
   padding: 48px 0 64px;
 }
@@ -56,23 +56,27 @@
   opacity: 0.65;
 }
 
-/* ── Track wrap ──────────────────────────────────────────── */
-/*
-  overflow:hidden clips the sliding track.
-  padding + negative margin on ALL sides lets shadows/radius
-  bleed out without affecting layout.
-  Confirmed working via live browser patch.
-*/
+/* ── Track wrap — clips horizontal overflow ──────────────── */
 .stories-carousel-track-wrap {
   flex: 1;
   overflow: hidden;
-  padding: 10px 16px 16px;
-  margin: -10px -16px -16px;
+  /* Vertical padding/margin lets the raised center card shadow breathe */
+  padding: 8px 0 14px;
+  margin: -8px 0 -14px;
 }
 
+/* ── Track — padding-left gives first card visible breathing room ── */
+/*
+  AEM's global CSS sets main { overflow-x: hidden } which clips
+  anything that bleeds outside the main container.
+  Instead of bleeding, we shift cards inward with padding-left.
+  The JS snapTo() subtracts this value from the offset so positioning
+  is still accurate.
+*/
 .stories-carousel-track {
   display: flex;
   gap: 20px;
+  padding: 0 4px;
   /* Transition managed entirely by JS — not set here */
   will-change: transform;
 }

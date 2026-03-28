@@ -1,7 +1,6 @@
 /* ============================================================
-   stories-carousel — v8
-   Clone-based infinite loop, 24px card radius, pill CTA,
-   pagination dots, swipe support
+   stories-carousel — v9
+   Fixes: arrows (stuck transition), dots on all breakpoints
    ============================================================ */
 
 /* ── Force white on block + AEM section wrapper ──────────── */
@@ -64,11 +63,11 @@
 .stories-carousel-track {
   display: flex;
   gap: 20px;
-  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition is managed entirely by JS — not set here */
   will-change: transform;
 }
 
-/* ── Cards — 3-up desktop, border-radius: 24px ───────────── */
+/* ── Cards — desktop: 3-up, border-radius: 24px ─────────── */
 .stories-carousel-card {
   flex: 0 0 calc((100% - 40px) / 3);
   background: #fff;
@@ -80,7 +79,6 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
-/* Center card elevated */
 .stories-carousel-card.is-center {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
   transform: translateY(-6px);
@@ -88,7 +86,6 @@
   z-index: 2;
 }
 
-/* Side cards slightly dimmed */
 .stories-carousel-card.is-side {
   opacity: 0.85;
 }
@@ -99,7 +96,6 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #ddd;
-  /* Top corners follow card radius */
   border-radius: 24px 24px 0 0;
 }
 
@@ -163,7 +159,6 @@
   color: #ffffff;
 }
 
-/* Center card CTA darker */
 .stories-carousel-card.is-center .stories-carousel-cta {
   background: #005f6b;
 }
@@ -180,7 +175,6 @@
   letter-spacing: 0.01em;
 }
 
-/* Circle chevron icon */
 .stories-carousel-cta-icon {
   flex-shrink: 0;
   width: 32px;
@@ -205,13 +199,12 @@
   height: 5px;
   background: linear-gradient(to right, #e8304a, #e6822a, #f5c518, #3ab87a);
   flex-shrink: 0;
-  /* Bottom corners follow card radius */
   border-radius: 0 0 24px 24px;
 }
 
-/* ── Pagination dots (mobile only) ──────────────────────── */
+/* ── Pagination dots — ALL breakpoints ───────────────────── */
 .stories-carousel-dots {
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -280,10 +273,5 @@
   .stories-carousel-nav svg {
     width: 20px;
     height: 20px;
-  }
-
-  /* Show dots on mobile */
-  .stories-carousel-dots {
-    display: flex;
   }
 }

@@ -15,8 +15,16 @@ export default function decorate(block) {
 
   block.textContent = '';
 
-  const section = document.createElement('div');
-  section.className = 'stories-carousel-section';
+  // Force white background on the block and its AEM section parent
+  block.style.background = '#fff';
+  const section = block.closest('.section');
+  if (section) {
+    section.style.background = '#fff';
+    section.style.backgroundColor = '#fff';
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'stories-carousel-section';
 
   // Prev button
   const prevBtn = document.createElement('button');
@@ -73,7 +81,7 @@ export default function decorate(block) {
     content.appendChild(quoteEl);
     content.appendChild(attrEl);
 
-    // CTA as <button> to avoid AEM global <a> color overrides
+    // CTA as <button> — avoids AEM global <a> color overrides
     const ctaBtn = document.createElement('button');
     ctaBtn.type = 'button';
     ctaBtn.className = 'stories-carousel-cta';
@@ -109,17 +117,14 @@ export default function decorate(block) {
   });
 
   trackWrap.appendChild(track);
-  section.appendChild(prevBtn);
-  section.appendChild(trackWrap);
-  section.appendChild(nextBtn);
-  block.appendChild(section);
+  wrapper.appendChild(prevBtn);
+  wrapper.appendChild(trackWrap);
+  wrapper.appendChild(nextBtn);
+  block.appendChild(wrapper);
 
   // ── Carousel logic ────────────────────────────────────────
-
   let current = 0;
 
-  // Returns how many cards are visible at the current viewport width.
-  // Must stay in sync with the CSS breakpoints.
   function getVisibleCount() {
     const w = window.innerWidth;
     if (w <= 560) return 1;
@@ -138,14 +143,10 @@ export default function decorate(block) {
     const visible = getVisibleCount();
     [...track.querySelectorAll('.stories-carousel-card')].forEach((card, i) => {
       card.classList.remove('is-center', 'is-side');
-      // Mark cards in the visible window
-      if (i >= current && i < current + visible) {
-        if (visible === 3 && i === current + 1) {
-          card.classList.add('is-center');
-        } else if (visible === 3) {
-          card.classList.add('is-side');
-        }
-        // For 1 or 2 visible, no center/side treatment needed
+      if (visible === 3) {
+        if (i === current) card.classList.add('is-side');
+        if (i === current + 1) card.classList.add('is-center');
+        if (i === current + 2) card.classList.add('is-side');
       }
     });
     prevBtn.disabled = current === 0;
@@ -163,14 +164,10 @@ export default function decorate(block) {
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
 
-  // On resize: recalculate position in case breakpoint changed
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      // Clamp current to new max so we don't get stuck off-screen
-      goTo(current);
-    }, 100);
+    resizeTimer = setTimeout(() => goTo(current), 100);
   });
 
   goTo(0);

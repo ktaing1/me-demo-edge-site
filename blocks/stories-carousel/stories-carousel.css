@@ -1,81 +1,113 @@
 /* ============================================================
-   stories-carousel block
-   Matches Ozempic/Novo Nordisk real-patient stories carousel
+   stories-carousel block — v2
+   Matches Ozempic real patient stories carousel exactly
    ============================================================ */
 
-/* Brand tokens — adjust to match your site's design tokens */
 :root {
-  --stories-carousel-teal: #007c89;
-  --stories-carousel-teal-dark: #005f6b;
-  --stories-carousel-text: #333333;
-  --stories-carousel-quote-color: #4a4a4a;
-  --stories-carousel-attribution-color: #555555;
-  --stories-carousel-nav-color: #007c89;
-  --stories-carousel-bar-gradient: linear-gradient(to right, #e74c3c, #e67e22, #f1c40f, #2ecc71);
-  --stories-carousel-card-bg: #ffffff;
-  --stories-carousel-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  --stories-carousel-shadow-center: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --sc-teal: #007c89;
+  --sc-teal-dark: #005f6b;
+  --sc-text: #333333;
+  --sc-quote: #4a4a4a;
+  --sc-attr: #555555;
+  --sc-bar: linear-gradient(to right, #e8304a, #e6822a, #f5c518, #3ab87a);
+  --sc-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --sc-shadow-center: 0 6px 28px rgba(0, 0, 0, 0.18);
 }
 
-/* Outer block */
+/* Block root */
 .stories-carousel {
   overflow: hidden;
-  padding: 40px 0 60px;
+  padding: 48px 0 64px;
   background: #fff;
 }
 
-/* Flex wrapper: [<] [track] [>] */
-.stories-carousel-wrapper {
+/* Flex row: [btn] [track] [btn] */
+.stories-carousel-section {
   display: flex;
   align-items: center;
-  gap: 8px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 16px;
-  position: relative;
+  padding: 0 8px;
+  gap: 0;
 }
 
-/* Scrolling track */
-.stories-carousel-track {
+/* ── Nav buttons ─────────────────────────────────────────── */
+.stories-carousel-nav {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
   display: flex;
-  gap: 24px;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
+  align-items: center;
+  justify-content: center;
+  color: var(--sc-teal);
+  transition: opacity 0.2s, color 0.2s;
+  /* Enough width so they don't collapse */
+  width: 44px;
+  height: 44px;
+}
+
+.stories-carousel-nav svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.stories-carousel-nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.stories-carousel-nav:not(:disabled):hover {
+  color: var(--sc-teal-dark);
+  opacity: 0.8;
+}
+
+/* ── Track ───────────────────────────────────────────────── */
+.stories-carousel-track-wrap {
   flex: 1;
-  overflow: visible;
-}
-
-/* Individual card */
-.stories-carousel-card {
-  flex: 0 0 calc((100% - 48px) / 3); /* 3 visible, 2 gaps of 24px */
-  background: var(--stories-carousel-card-bg);
-  border-radius: 4px;
-  box-shadow: var(--stories-carousel-shadow);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
   overflow: hidden;
 }
 
-/* Center card — slightly larger / more prominent */
+.stories-carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.stories-carousel-card {
+  flex: 0 0 calc((100% - 40px) / 3); /* 3 up, 2 x 20px gaps */
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px;
+  box-shadow: var(--sc-shadow);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+/* Center card elevated */
 .stories-carousel-card.is-center {
-  box-shadow: var(--stories-carousel-shadow-center);
-  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--sc-shadow-center);
+  transform: translateY(-6px);
   z-index: 2;
+  position: relative;
 }
 
-/* Side cards — slightly faded */
+/* Side cards slightly dimmed */
 .stories-carousel-card.is-side {
-  opacity: 0.88;
+  opacity: 0.85;
 }
 
-/* Image area */
+/* ── Image ───────────────────────────────────────────────── */
 .stories-carousel-image {
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #e8e8e8;
+  background: #ddd;
 }
 
 .stories-carousel-image img {
@@ -85,111 +117,106 @@
   display: block;
 }
 
-/* Quote */
+/* ── Content area ────────────────────────────────────────── */
+.stories-carousel-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0;
+}
+
+/* ── Quote ───────────────────────────────────────────────── */
 .stories-carousel-quote {
   font-style: italic;
-  font-size: 1rem;
-  line-height: 1.55;
-  color: var(--stories-carousel-quote-color);
-  padding: 20px 20px 4px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--sc-quote);
+  padding: 20px 18px 6px;
   margin: 0;
 }
 
-/* Attribution */
+/* ── Attribution ─────────────────────────────────────────── */
 .stories-carousel-attribution {
-  font-size: 0.9rem;
-  color: var(--stories-carousel-attribution-color);
+  font-size: 0.875rem;
+  color: var(--sc-attr);
   text-align: right;
-  padding: 0 20px 16px;
+  padding: 0 18px 18px;
   margin: 0;
   font-weight: 500;
 }
 
-/* CTA button */
+/* ── CTA button ──────────────────────────────────────────── */
+/*
+  Ozempic style:
+  - Full width, flush to card edges (no side margin)
+  - Teal background
+  - Bold white label on the left
+  - Circle with chevron on the right
+  - mt: auto pushes it to the bottom of the card
+*/
 .stories-carousel-cta {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--stories-carousel-teal);
+  justify-content: space-between;
+  background: var(--sc-teal);
   color: #fff;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 14px 20px;
-  margin: 0 20px 20px;
-  border-radius: 3px;
+  padding: 15px 18px;
+  margin-top: auto;
   transition: background 0.2s ease;
-  width: calc(100% - 40px);
+  width: 100%;
   box-sizing: border-box;
 }
 
 .stories-carousel-cta:hover,
 .stories-carousel-cta:focus {
-  background: var(--stories-carousel-teal-dark);
+  background: var(--sc-teal-dark);
   text-decoration: none;
+  color: #fff;
 }
 
-/* Circle arrow icon */
+.stories-carousel-cta-label {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+/* Circle border with chevron inside */
 .stories-carousel-cta-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 2px solid #fff;
-  font-size: 0.85rem;
-  line-height: 1;
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Rainbow bottom bar */
+.stories-carousel-cta-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* ── Rainbow bar ─────────────────────────────────────────── */
 .stories-carousel-bar {
   height: 5px;
-  background: var(--stories-carousel-bar-gradient);
-  margin-top: auto;
-}
-
-/* Nav buttons */
-.stories-carousel-nav {
-  background: transparent;
-  border: none;
-  color: var(--stories-carousel-nav-color);
-  font-size: 2.5rem;
-  cursor: pointer;
-  padding: 8px 4px;
-  line-height: 1;
+  background: var(--sc-bar);
   flex-shrink: 0;
-  transition: opacity 0.2s;
-  user-select: none;
-}
-
-.stories-carousel-nav:disabled {
-  opacity: 0.25;
-  cursor: default;
-}
-
-.stories-carousel-nav:not(:disabled):hover {
-  opacity: 0.7;
 }
 
 /* ============================================================
-   Responsive — tablet: 2 cards
+   Responsive
    ============================================================ */
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .stories-carousel-card {
-    flex: 0 0 calc((100% - 24px) / 2);
-  }
-
-  .stories-carousel-card.is-side:last-of-type {
-    display: none;
+    flex: 0 0 calc((100% - 20px) / 2);
   }
 }
 
-/* ============================================================
-   Responsive — mobile: 1 card
-   ============================================================ */
-@media (max-width: 600px) {
+@media (max-width: 560px) {
   .stories-carousel-card {
     flex: 0 0 100%;
   }
@@ -198,15 +225,17 @@
   .stories-carousel-card.is-side {
     transform: none;
     opacity: 1;
-    box-shadow: var(--stories-carousel-shadow);
-  }
-
-  .stories-carousel-wrapper {
-    padding: 0 8px;
-    gap: 4px;
+    box-shadow: var(--sc-shadow);
   }
 
   .stories-carousel-nav {
-    font-size: 1.8rem;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+
+  .stories-carousel-nav svg {
+    width: 22px;
+    height: 22px;
   }
 }

@@ -1,6 +1,8 @@
 /* ============================================================
-   stories-carousel — v9
-   Fixes: arrows (stuck transition), dots on all breakpoints
+   stories-carousel — v10
+   Fix: first/last card clipped by overflow:hidden on block.
+   overflow:hidden now lives ONLY on the track-wrap.
+   Block gets horizontal padding so shadows/radius show fully.
    ============================================================ */
 
 /* ── Force white on block + AEM section wrapper ──────────── */
@@ -11,9 +13,9 @@
   background-color: #ffffff !important;
 }
 
-/* ── Block root ──────────────────────────────────────────── */
+/* ── Block root — NO overflow:hidden here ────────────────── */
 .stories-carousel {
-  overflow: hidden;
+  /* overflow removed — was clipping left/right card edges */
   padding: 48px 0 64px;
 }
 
@@ -23,7 +25,8 @@
   align-items: center;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 8px;
+  /* Horizontal padding gives cards room to show shadow on edges */
+  padding: 12px 16px 16px;
 }
 
 /* ── Nav buttons ─────────────────────────────────────────── */
@@ -54,16 +57,19 @@
   opacity: 0.65;
 }
 
-/* ── Track ───────────────────────────────────────────────── */
+/* ── Track wrap — overflow:hidden ONLY here ──────────────── */
 .stories-carousel-track-wrap {
   flex: 1;
   overflow: hidden;
+  /* Small vertical overflow to let the raised center card shadow breathe */
+  padding: 8px 0 12px;
+  margin: -8px 0 -12px;
 }
 
 .stories-carousel-track {
   display: flex;
   gap: 20px;
-  /* transition is managed entirely by JS — not set here */
+  /* transition managed entirely by JS */
   will-change: transform;
 }
 
@@ -202,7 +208,7 @@
   border-radius: 0 0 24px 24px;
 }
 
-/* ── Pagination dots — ALL breakpoints ───────────────────── */
+/* ── Pagination dots — all breakpoints ───────────────────── */
 .stories-carousel-dots {
   display: flex;
   justify-content: center;
@@ -249,6 +255,10 @@
 
 /* ── Mobile: 1-up ────────────────────────────────────────── */
 @media (max-width: 560px) {
+  .stories-carousel-section {
+    padding: 12px 8px 16px;
+  }
+
   .stories-carousel-card {
     flex: 0 0 100%;
   }

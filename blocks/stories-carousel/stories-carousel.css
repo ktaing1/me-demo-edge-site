@@ -1,67 +1,55 @@
 /* ============================================================
-   stories-carousel block — v2
-   Matches Ozempic real patient stories carousel exactly
+   stories-carousel — v4
+   CTA uses <button> to avoid AEM global <a> color overrides
    ============================================================ */
 
-:root {
-  --sc-teal: #007c89;
-  --sc-teal-dark: #005f6b;
-  --sc-text: #333333;
-  --sc-quote: #4a4a4a;
-  --sc-attr: #555555;
-  --sc-bar: linear-gradient(to right, #e8304a, #e6822a, #f5c518, #3ab87a);
-  --sc-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  --sc-shadow-center: 0 6px 28px rgba(0, 0, 0, 0.18);
-}
-
-/* Block root */
+/* ── Block root ──────────────────────────────────────────── */
 .stories-carousel {
   overflow: hidden;
   padding: 48px 0 64px;
   background: #fff;
 }
 
-/* Flex row: [btn] [track] [btn] */
+/* ── Layout: [nav] [track] [nav] ─────────────────────────── */
 .stories-carousel-section {
   display: flex;
   align-items: center;
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 8px;
-  gap: 0;
 }
 
 /* ── Nav buttons ─────────────────────────────────────────── */
 .stories-carousel-nav {
   flex-shrink: 0;
-  background: transparent;
+  background: none;
   border: none;
+  box-shadow: none;
+  outline: none;
   cursor: pointer;
   padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--sc-teal);
-  transition: opacity 0.2s, color 0.2s;
-  /* Enough width so they don't collapse */
-  width: 44px;
-  height: 44px;
+  color: #007c89;
+  width: 48px;
+  height: 48px;
+  transition: opacity 0.2s;
 }
 
 .stories-carousel-nav svg {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: block;
 }
 
 .stories-carousel-nav:disabled {
-  opacity: 0.25;
+  opacity: 0.2;
   cursor: default;
 }
 
 .stories-carousel-nav:not(:disabled):hover {
-  color: var(--sc-teal-dark);
-  opacity: 0.8;
+  opacity: 0.65;
 }
 
 /* ── Track ───────────────────────────────────────────────── */
@@ -79,25 +67,22 @@
 
 /* ── Cards ───────────────────────────────────────────────── */
 .stories-carousel-card {
-  flex: 0 0 calc((100% - 40px) / 3); /* 3 up, 2 x 20px gaps */
+  flex: 0 0 calc((100% - 40px) / 3);
   background: #fff;
   display: flex;
   flex-direction: column;
-  border-radius: 2px;
-  box-shadow: var(--sc-shadow);
   overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
-/* Center card elevated */
 .stories-carousel-card.is-center {
-  box-shadow: var(--sc-shadow-center);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
   transform: translateY(-6px);
-  z-index: 2;
   position: relative;
+  z-index: 2;
 }
 
-/* Side cards slightly dimmed */
 .stories-carousel-card.is-side {
   opacity: 0.85;
 }
@@ -117,99 +102,99 @@
   display: block;
 }
 
-/* ── Content area ────────────────────────────────────────── */
+/* ── Text content ────────────────────────────────────────── */
 .stories-carousel-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  padding: 0;
 }
 
-/* ── Quote ───────────────────────────────────────────────── */
 .stories-carousel-quote {
   font-style: italic;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--sc-quote);
+  color: #4a4a4a;
   padding: 20px 18px 6px;
   margin: 0;
 }
 
-/* ── Attribution ─────────────────────────────────────────── */
 .stories-carousel-attribution {
   font-size: 0.875rem;
-  color: var(--sc-attr);
+  color: #555;
   text-align: right;
-  padding: 0 18px 18px;
+  padding: 0 18px 16px;
   margin: 0;
   font-weight: 500;
 }
 
 /* ── CTA button ──────────────────────────────────────────── */
 /*
-  Ozempic style:
-  - Full width, flush to card edges (no side margin)
-  - Teal background
-  - Bold white label on the left
-  - Circle with chevron on the right
-  - mt: auto pushes it to the bottom of the card
+  Using <button> instead of <a> completely avoids AEM's global
+  link color rules. Buttons have no default inherited color.
 */
 .stories-carousel-cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--sc-teal);
-  color: #fff;
-  text-decoration: none;
-  padding: 15px 18px;
-  margin-top: auto;
-  transition: background 0.2s ease;
   width: 100%;
   box-sizing: border-box;
+  padding: 15px 18px;
+  background: #007c89;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  color: #ffffff;
+  text-align: left;
+  transition: background 0.2s ease;
+  /* reset any AEM button styles */
+  border-radius: 0;
+  margin: 0;
+  font-family: inherit;
 }
 
 .stories-carousel-cta:hover,
 .stories-carousel-cta:focus {
-  background: var(--sc-teal-dark);
-  text-decoration: none;
-  color: #fff;
+  background: #005f6b;
+  color: #ffffff;
 }
 
 .stories-carousel-cta-label {
   font-weight: 700;
   font-size: 1rem;
+  color: #ffffff;
   line-height: 1.2;
   letter-spacing: 0.01em;
 }
 
-/* Circle border with chevron inside */
+/* Circle with chevron */
 .stories-carousel-cta-icon {
   flex-shrink: 0;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #ffffff;
 }
 
 .stories-carousel-cta-icon svg {
   width: 16px;
   height: 16px;
   display: block;
+  stroke: #ffffff;
 }
 
 /* ── Rainbow bar ─────────────────────────────────────────── */
 .stories-carousel-bar {
   height: 5px;
-  background: var(--sc-bar);
+  background: linear-gradient(to right, #e8304a, #e6822a, #f5c518, #3ab87a);
   flex-shrink: 0;
 }
 
-/* ============================================================
-   Responsive
-   ============================================================ */
+/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 860px) {
   .stories-carousel-card {
     flex: 0 0 calc((100% - 20px) / 2);
@@ -225,17 +210,17 @@
   .stories-carousel-card.is-side {
     transform: none;
     opacity: 1;
-    box-shadow: var(--sc-shadow);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
 
   .stories-carousel-nav {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     padding: 4px;
   }
 
   .stories-carousel-nav svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 }

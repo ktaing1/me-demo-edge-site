@@ -1,8 +1,11 @@
 /* ============================================================
    stories-carousel — v10
-   Fix: first/last card clipped by overflow:hidden on block.
-   overflow:hidden now lives ONLY on the track-wrap.
-   Block gets horizontal padding so shadows/radius show fully.
+   Fix: first/last card shadow + border-radius clipped.
+   Key changes:
+   - .stories-carousel has NO overflow:hidden (was clipping cards)
+   - Clipping is handled ONLY by .stories-carousel-track-wrap
+   - Padding/margin trick on track-wrap exposes vertical shadows
+   - Section padding gives horizontal breathing room
    ============================================================ */
 
 /* ── Force white on block + AEM section wrapper ──────────── */
@@ -13,10 +16,10 @@
   background-color: #ffffff !important;
 }
 
-/* ── Block root — NO overflow:hidden here ────────────────── */
+/* ── Block root — NO overflow:hidden ─────────────────────── */
 .stories-carousel {
-  /* overflow removed — was clipping left/right card edges */
   padding: 48px 0 64px;
+  /* overflow intentionally omitted — was clipping card edges */
 }
 
 /* ── Layout: [nav] [track] [nav] ─────────────────────────── */
@@ -25,8 +28,7 @@
   align-items: center;
   max-width: 1100px;
   margin: 0 auto;
-  /* Horizontal padding gives cards room to show shadow on edges */
-  padding: 12px 16px 16px;
+  padding: 16px 20px 20px;
 }
 
 /* ── Nav buttons ─────────────────────────────────────────── */
@@ -57,23 +59,24 @@
   opacity: 0.65;
 }
 
-/* ── Track wrap — overflow:hidden ONLY here ──────────────── */
+/* ── Track wrap — the ONLY element with overflow:hidden ───── */
+/* Padding + negative margin lets vertical shadows bleed out   */
+/* while horizontal scrolling stays clipped                    */
 .stories-carousel-track-wrap {
   flex: 1;
   overflow: hidden;
-  /* Small vertical overflow to let the raised center card shadow breathe */
-  padding: 8px 0 12px;
-  margin: -8px 0 -12px;
+  padding: 10px 2px 16px;
+  margin: -10px -2px -16px;
 }
 
 .stories-carousel-track {
   display: flex;
   gap: 20px;
-  /* transition managed entirely by JS */
+  /* Transition managed entirely by JS — not set here */
   will-change: transform;
 }
 
-/* ── Cards — desktop: 3-up, border-radius: 24px ─────────── */
+/* ── Cards — desktop: 3-up ───────────────────────────────── */
 .stories-carousel-card {
   flex: 0 0 calc((100% - 40px) / 3);
   background: #fff;
@@ -214,7 +217,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 24px;
   padding: 0 16px;
 }
 

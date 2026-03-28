@@ -1,13 +1,15 @@
 /* sema-footer */
-.sema-footer { background: #003087; color: #fff; font-family: Arial, sans-serif; padding: 40px 0 0; }
-.sema-footer-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; max-width: 1280px; margin: 0 auto; padding: 0 40px 40px; }
-.sema-footer-logo img { height: 48px; width: auto; filter: brightness(0) invert(1); }
-.sema-footer-nav { display: flex; flex-direction: column; gap: 10px; }
-.sema-footer-nav a { color: #fff; text-decoration: none; font-size: 0.88rem; }
-.sema-footer-nav a:hover { text-decoration: underline; }
-.sema-footer-legal { background: #00226b; padding: 16px 40px; font-size: 0.78rem; color: #ccd6f0; line-height: 1.6; text-align: center; }
-.sema-footer-legal a { color: #ccd6f0; }
+.sema-footer { font-family: Arial, Helvetica, sans-serif !important; background: #003087; color: #fff; }
+.sema-footer * { font-family: Arial, Helvetica, sans-serif !important; box-sizing: border-box; }
+.sema-footer a, .sema-footer a:visited, .sema-footer a:hover { color: #fff !important; text-decoration: none; }
+.sema-footer a:hover { text-decoration: underline !important; }
+.sema-footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 28px 40px; max-width: 1280px; margin: 0 auto; flex-wrap: wrap; }
+.sema-footer-logo img { height: 44px; width: auto; filter: brightness(0) invert(1); }
+.sema-footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+.sema-footer-nav a { font-size: 0.88rem !important; }
+.sema-footer-legal { background: #00226b; text-align: center; padding: 14px 40px; font-size: 0.78rem !important; color: #ccd6ee !important; line-height: 1.6; }
+.sema-footer-legal a, .sema-footer-legal a:visited { color: #ccd6ee !important; }
 @media (max-width: 768px) {
-  .sema-footer-inner { flex-direction: column; padding: 0 16px 32px; }
-  .sema-footer-legal { padding: 16px; }
+  .sema-footer-inner { flex-direction: column; align-items: flex-start; padding: 24px 16px; }
+  .sema-footer-legal { padding: 14px 16px; }
 }

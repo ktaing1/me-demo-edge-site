@@ -49,6 +49,7 @@ export default function decorate(block) {
     content.appendChild(quoteEl);
     content.appendChild(attrEl);
 
+    // CTA as <button> — avoids AEM global <a> colour overrides
     const ctaBtn = document.createElement('button');
     ctaBtn.type = 'button';
     ctaBtn.className = 'stories-carousel-cta';
@@ -80,7 +81,7 @@ export default function decorate(block) {
     return card;
   }
 
-  // ── DOM structure ─────────────────────────────────────────
+  // ── DOM ───────────────────────────────────────────────────
   const wrapper = document.createElement('div');
   wrapper.className = 'stories-carousel-section';
 
@@ -111,14 +112,9 @@ export default function decorate(block) {
   // ── Clone-based infinite loop ─────────────────────────────
   // Layout: [clone last 3] [real slides] [clone first 3]
   const CLONE_COUNT = 3;
-
-  for (let i = total - CLONE_COUNT; i < total; i++) {
-    track.appendChild(buildCard(slides[i]));
-  }
+  for (let i = total - CLONE_COUNT; i < total; i++) track.appendChild(buildCard(slides[i]));
   slides.forEach((data) => track.appendChild(buildCard(data)));
-  for (let i = 0; i < CLONE_COUNT; i++) {
-    track.appendChild(buildCard(slides[i]));
-  }
+  for (let i = 0; i < CLONE_COUNT; i++) track.appendChild(buildCard(slides[i]));
 
   // ── Pagination dots ───────────────────────────────────────
   const dotsWrap = document.createElement('div');
@@ -159,6 +155,12 @@ export default function decorate(block) {
     return card.offsetWidth + gap;
   }
 
+  // Track padding-left shifts ALL cards right — the offset calc
+  // must subtract it so card[CLONE_COUNT] aligns to the left edge.
+  function getTrackPaddingLeft() {
+    return parseFloat(getComputedStyle(track).paddingLeft) || 0;
+  }
+
   function updateDots() {
     dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
   }
@@ -176,15 +178,11 @@ export default function decorate(block) {
     });
   }
 
-  // Move track to current position.
-  // animated=false: instant snap (no transition), used for init + wrap-around.
   function snapTo(animated) {
-    const offset = (current + CLONE_COUNT) * getCardWidth();
-    if (animated) {
-      track.style.transition = '';
-    } else {
-      track.style.transition = 'none';
-    }
+    // Offset = how far to slide the track left so the current real card is visible.
+    // Subtract track padding-left because that already shifts cards right.
+    const offset = (current + CLONE_COUNT) * getCardWidth() - getTrackPaddingLeft();
+    track.style.transition = animated ? '' : 'none';
     track.style.transform = `translateX(-${offset}px)`;
   }
 
@@ -196,45 +194,32 @@ export default function decorate(block) {
   function goTo(realIndex) {
     if (isBusy) return;
     isBusy = true;
-
-    // Clamp to real slide range (wrap handled by transitionend)
     current = ((realIndex % total) + total) % total;
-
     snapTo(true);
     updateCardStates();
     updateDots();
-
-    // Safety valve: if transitionend somehow never fires, release after 600ms
     busyTimer = setTimeout(releaseBusy, 600);
   }
 
-  // After each animated transition: release busy, and silently snap
-  // if we've landed in clone territory.
+  // After transition: release busy, silently snap if in clone zone
   track.addEventListener('transitionend', (e) => {
-    // Only care about the transform transition on the track itself
     if (e.target !== track || e.propertyName !== 'transform') return;
-
     releaseBusy();
 
     const trackIndex = current + CLONE_COUNT;
-
     if (trackIndex < CLONE_COUNT) {
-      // Went backwards past real start — jump to real end
       current = total - getVisibleCount();
       snapTo(false);
       updateCardStates();
       updateDots();
     } else if (trackIndex >= total + CLONE_COUNT) {
-      // Went forwards past real end — jump to real start
       current = 0;
       snapTo(false);
       updateCardStates();
       updateDots();
     }
 
-    // Force reflow so the snap registers before re-enabling CSS transition
-    // eslint-disable-next-line no-unused-expressions
-    track.offsetHeight;
+    track.offsetHeight; // eslint-disable-line no-unused-expressions
     track.style.transition = '';
   });
 
@@ -276,16 +261,12 @@ export default function decorate(block) {
     resizeTimer = setTimeout(() => {
       snapTo(false);
       updateCardStates();
-      // Force re-enable transition after snap
       track.offsetHeight; // eslint-disable-line no-unused-expressions
       track.style.transition = '';
     }, 100);
   });
 
-  // ── Init: silent snap to slide 0, then re-enable transitions ─
-  // Use double rAF so the browser paints the initial position
-  // before turning transitions back on. This prevents the
-  // "transition: none stuck forever" bug.
+  // ── Init: silent snap then re-enable transitions ──────────
   snapTo(false);
   updateCardStates();
   updateDots();

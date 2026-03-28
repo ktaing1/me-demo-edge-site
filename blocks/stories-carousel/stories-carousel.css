@@ -1,6 +1,7 @@
 /* ============================================================
-   stories-carousel — v4
-   CTA uses <button> to avoid AEM global <a> color overrides
+   stories-carousel — v5
+   Responsive: 3-up (desktop) → 2-up (tablet) → 1-up (mobile)
+   All five cards navigable at every breakpoint.
    ============================================================ */
 
 /* ── Block root ──────────────────────────────────────────── */
@@ -65,9 +66,9 @@
   will-change: transform;
 }
 
-/* ── Cards ───────────────────────────────────────────────── */
+/* ── Cards — desktop: 3-up ───────────────────────────────── */
 .stories-carousel-card {
-  flex: 0 0 calc((100% - 40px) / 3);
+  flex: 0 0 calc((100% - 40px) / 3); /* 3 cards, 2 gaps of 20px */
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -76,6 +77,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
+/* Center card elevated */
 .stories-carousel-card.is-center {
   box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
   transform: translateY(-6px);
@@ -83,6 +85,7 @@
   z-index: 2;
 }
 
+/* Side cards slightly dimmed */
 .stories-carousel-card.is-side {
   opacity: 0.85;
 }
@@ -128,10 +131,6 @@
 }
 
 /* ── CTA button ──────────────────────────────────────────── */
-/*
-  Using <button> instead of <a> completely avoids AEM's global
-  link color rules. Buttons have no default inherited color.
-*/
 .stories-carousel-cta {
   display: flex;
   align-items: center;
@@ -146,11 +145,10 @@
   cursor: pointer;
   color: #ffffff;
   text-align: left;
-  transition: background 0.2s ease;
-  /* reset any AEM button styles */
   border-radius: 0;
   margin: 0;
   font-family: inherit;
+  transition: background 0.2s ease;
 }
 
 .stories-carousel-cta:hover,
@@ -167,7 +165,6 @@
   letter-spacing: 0.01em;
 }
 
-/* Circle with chevron */
 .stories-carousel-cta-icon {
   flex-shrink: 0;
   width: 30px;
@@ -194,16 +191,25 @@
   flex-shrink: 0;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* ── Tablet: 2-up (must match JS breakpoint: 860px) ─────── */
 @media (max-width: 860px) {
   .stories-carousel-card {
-    flex: 0 0 calc((100% - 20px) / 2);
+    flex: 0 0 calc((100% - 20px) / 2); /* 2 cards, 1 gap of 20px */
+  }
+
+  /* No center/side treatment at 2-up */
+  .stories-carousel-card.is-center,
+  .stories-carousel-card.is-side {
+    transform: none;
+    opacity: 1;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
 }
 
+/* ── Mobile: 1-up (must match JS breakpoint: 560px) ─────── */
 @media (max-width: 560px) {
   .stories-carousel-card {
-    flex: 0 0 100%;
+    flex: 0 0 100%; /* 1 card, full width */
   }
 
   .stories-carousel-card.is-center,

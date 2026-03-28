@@ -1,0 +1,12 @@
+/* ── sema-card-grid ───────────────────────────────────────── */
+.sema-card-grid-section { padding: 48px 40px; background: #fff; }
+.sema-card-grid-heading { font-size: 1.6rem; font-weight: 900; color: #003087; text-align: center; margin: 0 0 36px; }
+.sema-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+.sema-card-grid-card { border: 2px solid #003087; border-radius: 8px; padding: 28px 24px; display: flex; flex-direction: column; text-align: center; background: #fff; }
+.sema-card-grid-date { font-size: 1rem; font-weight: 900; color: #003087; margin: 0 0 12px; }
+.sema-card-grid-body { flex: 1; font-size: 0.9rem; color: #222; line-height: 1.6; margin-bottom: 20px; }
+.sema-card-grid-cta { display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: #003087; font-weight: 700; font-size: 0.88rem; text-decoration: none; border: 1.5px solid #003087; border-radius: 40px; padding: 9px 18px; transition: background 0.2s, color 0.2s; margin-top: auto; }
+.sema-card-grid-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
+.sema-card-grid-cta:hover { background: #003087; color: #fff; }
+@media (max-width: 900px) { .sema-card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .sema-card-grid { grid-template-columns: 1fr; } .sema-card-grid-section { padding: 32px 16px; } }

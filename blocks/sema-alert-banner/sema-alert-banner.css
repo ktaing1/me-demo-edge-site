@@ -1,0 +1,12 @@
+/* ── sema-alert-banner ───────────────────────────────────── */
+.sema-alert-banner { display: flex; align-items: center; gap: 32px; background: linear-gradient(90deg, #007c6e 0%, #003087 100%); color: #fff; padding: 20px 40px; }
+.sema-alert-banner-left { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.sema-alert-banner-icon img { width: 52px; height: 52px; object-fit: contain; }
+.sema-alert-banner-headline { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; margin: 0; line-height: 1.3; color: #fff; max-width: 220px; }
+.sema-alert-banner-body { font-size: 0.95rem; line-height: 1.6; color: #fff; }
+.sema-alert-banner-body a { color: #fff; font-weight: 700; }
+.sema-alert-banner-body a:hover { opacity: 0.85; }
+@media (max-width: 768px) {
+  .sema-alert-banner { flex-direction: column; gap: 16px; padding: 20px 16px; }
+  .sema-alert-banner-headline { max-width: none; }
+}

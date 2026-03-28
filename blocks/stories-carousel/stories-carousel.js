@@ -8,7 +8,9 @@ export default function decorate(block) {
     const attribution = cells[2]?.textContent?.trim() || '';
     const ctaLabel = cells[3]?.textContent?.trim() || '';
     const ctaHref = cells[4]?.querySelector('a')?.href || cells[4]?.textContent?.trim() || '#';
-    return { img, quote, attribution, ctaLabel, ctaHref };
+    return {
+      img, quote, attribution, ctaLabel, ctaHref,
+    };
   });
 
   block.textContent = '';
@@ -16,12 +18,13 @@ export default function decorate(block) {
   const section = document.createElement('div');
   section.className = 'stories-carousel-section';
 
-  // Prev button — SVG chevron, sits outside the track
+  // Prev button
   const prevBtn = document.createElement('button');
+  prevBtn.type = 'button';
   prevBtn.className = 'stories-carousel-nav stories-carousel-prev';
   prevBtn.setAttribute('aria-label', 'Previous stories');
   prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
     <polyline points="15 18 9 12 15 6"/>
   </svg>`;
 
@@ -33,10 +36,11 @@ export default function decorate(block) {
 
   // Next button
   const nextBtn = document.createElement('button');
+  nextBtn.type = 'button';
   nextBtn.className = 'stories-carousel-nav stories-carousel-next';
   nextBtn.setAttribute('aria-label', 'Next stories');
   nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
     <polyline points="9 18 15 12 9 6"/>
   </svg>`;
 
@@ -54,7 +58,7 @@ export default function decorate(block) {
       imgWrap.appendChild(clonedImg);
     }
 
-    // Content area
+    // Text content
     const content = document.createElement('div');
     content.className = 'stories-carousel-content';
 
@@ -66,14 +70,23 @@ export default function decorate(block) {
     attrEl.className = 'stories-carousel-attribution';
     attrEl.textContent = `\u2014 ${data.attribution}`;
 
-    // CTA — full-width, label left, circle chevron right
-    const cta = document.createElement('a');
-    cta.className = 'stories-carousel-cta';
-    cta.href = data.ctaHref;
+    content.appendChild(quoteEl);
+    content.appendChild(attrEl);
 
-    const ctaText = document.createElement('span');
-    ctaText.className = 'stories-carousel-cta-label';
-    ctaText.textContent = data.ctaLabel;
+    // ── CTA: use <button role="link"> to dodge AEM's global <a> color rules ──
+    // A <button> has no inherited link color, so white text just works.
+    const ctaBtn = document.createElement('button');
+    ctaBtn.type = 'button';
+    ctaBtn.className = 'stories-carousel-cta';
+    ctaBtn.setAttribute('role', 'link');
+    ctaBtn.setAttribute('aria-label', data.ctaLabel);
+    ctaBtn.addEventListener('click', () => {
+      window.location.href = data.ctaHref;
+    });
+
+    const ctaLabel = document.createElement('span');
+    ctaLabel.className = 'stories-carousel-cta-label';
+    ctaLabel.textContent = data.ctaLabel;
 
     const ctaIcon = document.createElement('span');
     ctaIcon.className = 'stories-carousel-cta-icon';
@@ -82,19 +95,16 @@ export default function decorate(block) {
       <polyline points="9 18 15 12 9 6"/>
     </svg>`;
 
-    cta.appendChild(ctaText);
-    cta.appendChild(ctaIcon);
+    ctaBtn.appendChild(ctaLabel);
+    ctaBtn.appendChild(ctaIcon);
 
-    content.appendChild(quoteEl);
-    content.appendChild(attrEl);
-    content.appendChild(cta);
-
-    // Rainbow bottom bar
+    // Rainbow bar
     const bar = document.createElement('div');
     bar.className = 'stories-carousel-bar';
 
     card.appendChild(imgWrap);
     card.appendChild(content);
+    card.appendChild(ctaBtn);
     card.appendChild(bar);
     track.appendChild(card);
   });
@@ -105,7 +115,7 @@ export default function decorate(block) {
   section.appendChild(nextBtn);
   block.appendChild(section);
 
-  // --- Carousel logic ---
+  // ── Carousel logic ────────────────────────────────────────
   const VISIBLE = 3;
   let current = 0;
 
@@ -117,8 +127,7 @@ export default function decorate(block) {
   }
 
   function updateStates() {
-    const cards = [...track.querySelectorAll('.stories-carousel-card')];
-    cards.forEach((card, i) => {
+    [...track.querySelectorAll('.stories-carousel-card')].forEach((card, i) => {
       card.classList.remove('is-center', 'is-side');
       if (i === current) card.classList.add('is-side');
       if (i === current + 1) card.classList.add('is-center');
@@ -131,8 +140,7 @@ export default function decorate(block) {
   function goTo(index) {
     const maxIndex = Math.max(0, slides.length - VISIBLE);
     current = Math.max(0, Math.min(index, maxIndex));
-    const offset = current * getCardWidth();
-    track.style.transform = `translateX(-${offset}px)`;
+    track.style.transform = `translateX(-${current * getCardWidth()}px)`;
     updateStates();
   }
 

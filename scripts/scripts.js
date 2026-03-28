@@ -1,3 +1,17 @@
+// At the top of scripts.js, add this import helper:
+import { getMetadata } from './aem.js';
+
+// Then inside loadEager() or at the top of the main load sequence:
+const template = getMetadata('template');
+if (template === 'sema') {
+  // Load sema isolation script immediately — before nav renders
+  const semaScript = document.createElement('script');
+  semaScript.type = 'module';
+  semaScript.src = '/scripts/sema-page.js';
+  document.head.appendChild(semaScript);
+}
+
+
 import {
   buildBlock,
   loadHeader,

@@ -1,12 +1,73 @@
 /* sema-alert-banner */
-.sema-alert-banner { font-family: Arial, Helvetica, sans-serif !important; display: flex; align-items: center; gap: 32px; background: linear-gradient(90deg, #007c6e 0%, #003087 100%); color: #fff; padding: 20px 40px; }
-.sema-alert-banner * { font-family: Arial, Helvetica, sans-serif !important; box-sizing: border-box; }
-.sema-alert-banner a, .sema-alert-banner a:visited, .sema-alert-banner a:hover { color: #fff !important; font-weight: 700; text-decoration: underline; }
-.sema-alert-banner-left { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
-.sema-alert-banner-icon img { width: 52px; height: 52px; object-fit: contain; }
-.sema-alert-banner-headline { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; margin: 0; line-height: 1.3; color: #fff !important; max-width: 220px; }
-.sema-alert-banner-body { font-size: 0.95rem; line-height: 1.6; color: #fff !important; margin: 0; }
+.sema-alert-banner,
+.sema-alert-banner * {
+  font-family: Arial, Helvetica, sans-serif !important;
+  box-sizing: border-box;
+}
+
+.sema-alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: linear-gradient(90deg, #007c6e 0%, #003087 100%);
+  color: #fff;
+  padding: 20px 40px;
+}
+
+/* ── Left: icon + headline ───────────────────────────────── */
+.sema-alert-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.sema-alert-banner-icon img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.sema-alert-banner-headline {
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 !important;
+  line-height: 1.3;
+  color: #fff !important;
+  max-width: 220px;
+  white-space: pre-line;
+}
+
+/* ── Right: body ─────────────────────────────────────────── */
+.sema-alert-banner-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #fff !important;
+}
+
+.sema-alert-banner-body p {
+  margin: 0 0 4px;
+  color: #fff !important;
+}
+
+.sema-alert-banner-body a,
+.sema-alert-banner-body a:visited,
+.sema-alert-banner-body a:hover {
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
-  .sema-alert-banner { flex-direction: column; gap: 16px; padding: 20px 16px; }
-  .sema-alert-banner-headline { max-width: none; }
+  .sema-alert-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+  .sema-alert-banner-headline {
+    max-width: none;
+  }
 }

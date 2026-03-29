@@ -1,38 +1,45 @@
 export default function decorate(block) {
-  const rows = [...block.querySelectorAll(':scope > div')];
-  if (!rows.length) return;
-  const cells = [...rows[0].querySelectorAll(':scope > div')];
+    // AEM EDS cell layout (row 2):
+  // cells[0]=empty  cells[1]=text content  cells[2]=hero image
+  const cells = [...block.querySelectorAll(':scope > div > div')];
 
   block.textContent = '';
 
   const hero = document.createElement('div');
-  hero.className = 'sema-hero';
+    hero.className = 'sema-hero';
 
-  // Left: text content
-  const left = document.createElement('div');
-  left.className = 'sema-hero-content';
-  if (cells[0]) left.innerHTML = cells[0].innerHTML;
-
-  // Right: image
-  const right = document.createElement('div');
-  right.className = 'sema-hero-image';
-  if (cells[1]) {
-    const img = cells[1].querySelector('img');
-    if (img) {
-      img.setAttribute('loading', 'eager');
-      right.appendChild(img.cloneNode(true));
+  // ── LEFT: text content ────────────────────────────────
+  const content = document.createElement('div');
+    content.className = 'sema-hero-content';
+    if (cells[1]) {
+          content.innerHTML = cells[1].innerHTML;
+          // Style any plain links as buttons
+      [...content.querySelectorAll('a')].forEach((a) => {
+              if (!a.classList.length) a.classList.add('button');
+      });
     }
-    // Actor portrayal caption
-    const caption = cells[1].querySelector('p:last-child');
-    if (caption && caption.textContent.toLowerCase().includes('actor')) {
-      const cap = document.createElement('p');
-      cap.className = 'sema-hero-caption';
-      cap.textContent = caption.textContent.trim();
-      right.appendChild(cap);
-    }
-  }
 
-  hero.appendChild(left);
-  hero.appendChild(right);
-  block.appendChild(hero);
+  // ── RIGHT: image ──────────────────────────────────────
+  const imgWrap = document.createElement('div');
+    imgWrap.className = 'sema-hero-image';
+    if (cells[2]) {
+          const img = cells[2].querySelector('img');
+          if (img) {
+                  img.setAttribute('loading', 'eager');
+                  imgWrap.appendChild(img.cloneNode(true));
+          }
+          // Actor portrayal caption
+      const cap = [...cells[2].querySelectorAll('p')]
+            .find((p) => p.textContent.toLowerCase().includes('actor'));
+          if (cap) {
+                  const caption = document.createElement('p');
+                  caption.className = 'sema-hero-caption';
+                  caption.textContent = cap.textContent.trim();
+                  imgWrap.appendChild(caption);
+          }
+    }
+
+  hero.appendChild(content);
+    hero.appendChild(imgWrap);
+    block.appendChild(hero);
 }

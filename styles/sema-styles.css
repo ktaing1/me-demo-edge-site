@@ -1,6 +1,15 @@
-* sema-styles.css — isolation reset for all sema- pages */
+* ============================================================
+   sema-styles.css
+   Global isolation + layout reset for all sema- pages
+   ============================================================ */
 
-/* 1. Hide site nav + footer on sema pages */
+/* 1. White page background — site sets body to near-black (#080808) */
+body.sema-page {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+}
+
+/* 2. Hide site nav + footer */
 body.sema-page > header,
 body.sema-page header.header-wrapper,
 body.sema-page header.nav-wrapper {
@@ -10,16 +19,15 @@ body.sema-page > footer {
       display: none !important;
 }
 
-/* 2. Remove nav-height offset AEM adds to main */
+/* 3. Remove nav-height top offset AEM adds to main */
 body.sema-page main {
       margin-top: 0 !important;
       padding-top: 0 !important;
       overflow-x: visible !important;
+      background: #ffffff !important;
 }
 
-/* 3. Remove section margin/padding gaps AEM adds globally.
-   AEM's styles.css sets margin-bottom: 40px on every .section.
-   On sema pages we manage spacing inside each block's own CSS. */
+/* 4. Remove section margin/padding gaps AEM adds globally */
 body.sema-page main .section {
       margin-top: 0 !important;
       margin-bottom: 0 !important;
@@ -27,76 +35,19 @@ body.sema-page main .section {
       padding-bottom: 0 !important;
 }
 
-/* 4. Sema design tokens */
-:root {
-      --sema-navy: #003087;
-      --sema-navy-dark: #00226b;
-      --sema-teal: #007c6e;
-      --sema-font: Arial, Helvetica, sans-serif;
-}
-
-/* 5. Font reset — override site Times body font */
-body.sema-page .sema-header,
-body.sema-page .sema-alert-banner,
-body.sema-page .sema-hero,
-body.sema-page .sema-promo,
-body.sema-page .sema-video-embed,
-body.sema-page .sema-card-grid-section,
-body.sema-page .sema-accordion,
-body.sema-page .sema-footer {
-      font-family: Arial, Helvetica, sans-serif !important;
-}
-
-body.sema-page .sema-header *,
-body.sema-page .sema-alert-banner *,
-body.sema-page .sema-hero *,
-body.sema-page .sema-promo *,
-body.sema-page .sema-video-embed *,
-body.sema-page .sema-card-grid-section *,
-body.sema-page .sema-accordion *,
-body.sema-page .sema-footer * {
-      font-family: Arial, Helvetica, sans-serif !important;
-}
-
-/* 6. Override orange link color inside all sema blocks */
-body.sema-page .sema-header a,
-body.sema-page .sema-alert-banner a,
-body.sema-page .sema-hero a,
-body.sema-page .sema-promo a,
-body.sema-page .sema-video-embed a,
-body.sema-page .sema-card-grid-section a,
-body.sema-page .sema-accordion a,
-body.sema-page .sema-footer a {
-      color: #003087 !important;
-      text-decoration: none;
-}
-
-/* 7. Override heading styles */
-body.sema-page .sema-hero h1,
-body.sema-page .sema-promo h2,
-body.sema-page .sema-promo h3,
-body.sema-page .sema-video-embed h2,
-body.sema-page .sema-card-grid-section h2,
-body.sema-page .sema-accordion h2,
-body.sema-page .sema-accordion h3 {
-      color: #003087 !important;
-      font-family: Arial, Helvetica, sans-serif !important;
-}
-
-/* 8. Override button styles */
-body.sema-page .sema-promo .button,
-body.sema-page .sema-hero .button {
-      background: #003087 !important;
-      color: #fff !important;
-      border-radius: 40px !important;
-      text-decoration: none !important;
-      border: none !important;
-}
-
-/* 9. Constrain banner icon — Google Doc inserts full-size images */
-body.sema-page .sema-alert-banner-icon img {
-      width: 52px !important;
-      height: 52px !important;
-      max-width: 52px !important;
-      object-fit: contain !important;
-}
+/* 5. Break block wrappers out of the 1200px max-width constraint.
+   AEM wraps every block in .block-name-wrapper with max-width:1200px margin:0 auto.
+   For full-bleed sema blocks we need to override this. */
+body.sema-page .sema-header-wrapper,
+body.sema-page .sema-alert-banner-wrapper,
+body.sema-page .sema-hero-wrapper,
+body.sema-page .sema-promo-wrapper,
+body.sema-page .sema-video-embed-wrapper,
+body.sema-page .sema-card-grid-wrapper,
+body.sema-page .sema-accordion-wrapper,
+body.sema-page .sema-footer-wrapper {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding-left: 0 !im

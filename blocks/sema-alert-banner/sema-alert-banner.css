@@ -5,10 +5,17 @@
   box-sizing: border-box;
 }
 
+/* Force the block wrapper and section to be full width */
+.sema-alert-banner-wrapper {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
 .sema-alert-banner {
   display: flex;
   align-items: center;
   gap: 32px;
+  width: 100%;
   background: linear-gradient(90deg, #007c6e 0%, #003087 100%);
   color: #fff;
   padding: 20px 40px;
@@ -53,6 +60,7 @@
 }
 
 .sema-alert-banner-body a,
+.sema-alert-banner-body a:link,
 .sema-alert-banner-body a:visited,
 .sema-alert-banner-body a:hover {
   color: #fff !important;

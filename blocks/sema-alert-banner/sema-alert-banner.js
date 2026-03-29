@@ -1,4 +1,4 @@
-export default function decorate(block) {
+───────────────────────────────────────────────────────────────────export default function decorate(block) {
   // AEM EDS cell layout (row 2):
   // cells[0] = empty | cells[1] = icon + headline | cells[2] = body text
   const cells = [...block.querySelectorAll(':scope > div > div')];

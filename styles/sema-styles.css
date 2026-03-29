@@ -1,41 +1,41 @@
-/* ============================================================
-   sema-styles.css  →  place at /styles/sema-styles.css
-   Loaded by scripts.js for pages with template: sema
-   ============================================================ */
+* sema-styles.css — isolation reset for all sema- pages */
 
-/* ── 1. Hide the site's global nav and footer ────────────── */
+/* 1. Hide site nav + footer on sema pages */
 body.sema-page > header,
 body.sema-page header.header-wrapper,
 body.sema-page header.nav-wrapper {
-  display: none !important;
+      display: none !important;
 }
-
 body.sema-page > footer {
-  display: none !important;
+      display: none !important;
 }
 
-/* ── 2. Remove the nav-height top offset AEM adds to main ── */
+/* 2. Remove nav-height offset AEM adds to main */
 body.sema-page main {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  overflow-x: visible !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      overflow-x: visible !important;
 }
 
-/* ── 3. Sema design tokens ───────────────────────────────── */
+/* 3. Remove section margin/padding gaps AEM adds globally.
+   AEM's styles.css sets margin-bottom: 40px on every .section.
+   On sema pages we manage spacing inside each block's own CSS. */
+body.sema-page main .section {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+}
+
+/* 4. Sema design tokens */
 :root {
-  --sema-navy:        #003087;
-  --sema-navy-dark:   #00226b;
-  --sema-teal:        #007c6e;
-  --sema-blue-light:  #e8f4fb;
-  --sema-gray-bg:     #f2f6fa;
-  --sema-white:       #ffffff;
-  --sema-text:        #222222;
-  --sema-text-muted:  #555555;
-  --sema-border:      #b0bec5;
-  --sema-font:        Arial, Helvetica, sans-serif;
+      --sema-navy: #003087;
+      --sema-navy-dark: #00226b;
+      --sema-teal: #007c6e;
+      --sema-font: Arial, Helvetica, sans-serif;
 }
 
-/* ── 4. Font reset — override site's Times body font ────── */
+/* 5. Font reset — override site Times body font */
 body.sema-page .sema-header,
 body.sema-page .sema-alert-banner,
 body.sema-page .sema-hero,
@@ -44,7 +44,7 @@ body.sema-page .sema-video-embed,
 body.sema-page .sema-card-grid-section,
 body.sema-page .sema-accordion,
 body.sema-page .sema-footer {
-  font-family: Arial, Helvetica, sans-serif !important;
+      font-family: Arial, Helvetica, sans-serif !important;
 }
 
 body.sema-page .sema-header *,
@@ -55,10 +55,10 @@ body.sema-page .sema-video-embed *,
 body.sema-page .sema-card-grid-section *,
 body.sema-page .sema-accordion *,
 body.sema-page .sema-footer * {
-  font-family: Arial, Helvetica, sans-serif !important;
+      font-family: Arial, Helvetica, sans-serif !important;
 }
 
-/* ── 5. Link color reset — override site's #ff5000 orange ── */
+/* 6. Override orange link color inside all sema blocks */
 body.sema-page .sema-header a,
 body.sema-page .sema-alert-banner a,
 body.sema-page .sema-hero a,
@@ -67,11 +67,11 @@ body.sema-page .sema-video-embed a,
 body.sema-page .sema-card-grid-section a,
 body.sema-page .sema-accordion a,
 body.sema-page .sema-footer a {
-  color: #003087 !important;
-  text-decoration: none;
+      color: #003087 !important;
+      text-decoration: none;
 }
 
-/* ── 6. Heading reset inside sema blocks ─────────────────── */
+/* 7. Override heading styles */
 body.sema-page .sema-hero h1,
 body.sema-page .sema-promo h2,
 body.sema-page .sema-promo h3,
@@ -79,18 +79,24 @@ body.sema-page .sema-video-embed h2,
 body.sema-page .sema-card-grid-section h2,
 body.sema-page .sema-accordion h2,
 body.sema-page .sema-accordion h3 {
-  color: #003087 !important;
-  font-family: Arial, Helvetica, sans-serif !important;
+      color: #003087 !important;
+      font-family: Arial, Helvetica, sans-serif !important;
 }
 
-/* ── 7. Button reset — override site button styles ───────── */
+/* 8. Override button styles */
 body.sema-page .sema-promo .button,
-body.sema-page .sema-hero .button,
-body.sema-page .sema-video-embed .button {
-  background: #003087 !important;
-  color: #fff !important;
-  border-radius: 40px !important;
-  text-decoration: none !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  border: none !important;
+body.sema-page .sema-hero .button {
+      background: #003087 !important;
+      color: #fff !important;
+      border-radius: 40px !important;
+      text-decoration: none !important;
+      border: none !important;
+}
+
+/* 9. Constrain banner icon — Google Doc inserts full-size images */
+body.sema-page .sema-alert-banner-icon img {
+      width: 52px !important;
+      height: 52px !important;
+      max-width: 52px !important;
+      object-fit: contain !important;
 }

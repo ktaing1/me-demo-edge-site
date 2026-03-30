@@ -4,7 +4,7 @@ export default function decorate(block) {
   const cells = [...block.querySelectorAll(':scope > div > div')];
   block.textContent = '';
   const promo = document.createElement('div');
-  promo.className = `sema-promo${isReverse ? ' sema-promo-reverse' : ''}`;
+  promo.className = 'sema-promo' + (isReverse ? ' sema-promo-reverse' : '');
   const imgSide = document.createElement('div');
   imgSide.className = 'sema-promo-image';
   if (cells[1]) {

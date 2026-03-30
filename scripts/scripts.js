@@ -10,7 +10,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
-  getMetadata, 
+  getMetadata,
 } from './aem.js';
 
 /**
@@ -18,7 +18,7 @@ import {
  * @param {Element} main The container element
  */
 function buildHeroBlock(main) {
-  // Skip on sema pages — they use sema-hero block instead
+  // Skip on sema pages — sema-hero block handles the hero
   if (document.body.classList.contains('sema-page')) return;
   const h1 = main.querySelector('h1');
   const picture = main.querySelector('picture');
@@ -59,3 +59,138 @@ function buildAutoBlocks(main) {
           try {
             const { pathname } = new URL(fragment.href);
             const frag = await loadFragment(pathname);
+            fragment.parentElement.replaceWith(...frag.children);
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Fragment loading failed', error);
+          }
+        });
+      });
+    }
+    buildHeroBlock(main);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Auto Blocking failed', error);
+  }
+}
+
+/**
+ * Decorates formatted links to style them as buttons.
+ * @param {HTMLElement} main The main container element
+ */
+function decorateButtons(main) {
+  main.querySelectorAll('p a[href]').forEach((a) => {
+    a.title = a.title || a.textContent;
+    const p = a.closest('p');
+    const text = a.textContent.trim();
+    if (a.querySelector('img') || p.textContent.trim() !== text) return;
+    try {
+      if (new URL(a.href).href === new URL(text, window.location).href) return;
+    } catch { /* continue */ }
+    const strong = a.closest('strong');
+    const em = a.closest('em');
+    if (!strong && !em) return;
+    p.className = 'button-wrapper';
+    a.className = 'button';
+    if (strong && em) {
+      a.classList.add('accent');
+      const outer = strong.contains(em) ? strong : em;
+      outer.replaceWith(a);
+    } else if (strong) {
+      a.classList.add('primary');
+      strong.replaceWith(a);
+    } else {
+      a.classList.add('secondary');
+      em.replaceWith(a);
+    }
+  });
+}
+
+/**
+ * Decorates the main element.
+ * @param {Element} main The main element
+ */
+// eslint-disable-next-line import/prefer-default-export
+export function decorateMain(main) {
+  decorateIcons(main);
+  buildAutoBlocks(main);
+  decorateSections(main);
+  decorateBlocks(main);
+  decorateButtons(main);
+}
+
+/**
+ * Loads everything needed to get to LCP.
+ * @param {Element} doc The container element
+ */
+async function loadEager(doc) {
+  document.documentElement.lang = 'en';
+  decorateTemplateAndTheme();
+
+  // Sema page isolation — inject CSS reset and body class immediately
+  if (getMetadata('template') === 'sema') {
+    const semaCSS = document.createElement('link');
+    semaCSS.rel = 'stylesheet';
+    semaCSS.href = '/styles/sema-styles.css';
+    document.head.insertBefore(semaCSS, document.head.firstChild);
+    document.body.classList.add('sema-page');
+  }
+
+  const main = doc.querySelector('main');
+  if (main) {
+    decorateMain(main);
+    document.body.classList.add('appear');
+    await loadSection(main.querySelector('.section'), waitForFirstImage);
+  }
+  try {
+    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
+      loadFonts();
+    }
+  } catch (e) {
+    // do nothing
+  }
+}
+
+/**
+ * Loads everything that doesn't need to be delayed.
+ * @param {Element} doc The container element
+ */
+async function loadLazy(doc) {
+  // Skip site header/footer on sema pages
+  if (getMetadata('template') !== 'sema') {
+    loadHeader(doc.querySelector('header'));
+    loadFooter(doc.querySelector('footer'));
+  } else {
+    const siteHeader = doc.querySelector('header');
+    const siteFooter = doc.querySelector('footer');
+    if (siteHeader) siteHeader.style.display = 'none';
+    if (siteFooter) siteFooter.style.display = 'none';
+    const main = doc.querySelector('main');
+    if (main) main.style.marginTop = '0';
+  }
+
+  const main = doc.querySelector('main');
+  await loadSections(main);
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) element.scrollIntoView();
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadFonts();
+}
+
+/**
+ * Loads everything that happens a lot later,
+ * without impacting the user experience.
+ */
+function loadDelayed() {
+  // eslint-disable-next-line import/no-cycle
+  window.setTimeout(() => import('./delayed.js'), 3000);
+}
+
+async function loadPage() {
+  await loadEager(document);
+  await loadLazy(document);
+  loadDelayed();
+}
+
+loadPage();

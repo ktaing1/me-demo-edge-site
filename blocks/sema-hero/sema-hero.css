@@ -1,12 +1,15 @@
 /* sema-hero */
-/* Target the block element directly using the grid class */
-.sema-hero-grid,
-.sema-hero-grid * {
+.sema-hero,
+.sema-hero * {
   font-family: Arial, Helvetica, sans-serif !important;
   box-sizing: border-box;
 }
 
-.sema-hero-grid {
+[data-block-name="sema-hero"] {
+  width: 100%;
+}
+
+.sema-hero {
   display: grid !important;
   grid-template-columns: 1fr 1fr;
   width: 100%;
@@ -93,7 +96,7 @@
 }
 
 @media (max-width: 768px) {
-  .sema-hero-grid {
+  .sema-hero {
     grid-template-columns: 1fr;
   }
   .sema-hero-content {

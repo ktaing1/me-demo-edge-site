@@ -1,22 +1,23 @@
-/* sema-hero */
+/* sema-hero
+   The block element itself has class "sema-hero" — we style it directly.
+   No nested wrapper div is created by the JS decorator.
+*/
 .sema-hero,
 .sema-hero * {
   font-family: Arial, Helvetica, sans-serif !important;
   box-sizing: border-box;
 }
 
-[data-block-name="sema-hero"] {
-  width: 100%;
-}
-
+/* Block is the grid — 2 equal columns, full width */
 .sema-hero {
-  display: grid !important;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
   min-height: 480px;
   background: #e8f4fb;
 }
 
+/* Left: text content */
 .sema-hero-content {
   padding: 60px 48px;
   display: flex;
@@ -36,7 +37,6 @@
   font-size: 1.6rem !important;
   font-weight: 900 !important;
   color: #003087 !important;
-  line-height: 1.2;
   margin: 0 0 20px !important;
 }
 
@@ -70,10 +70,10 @@
   background: #00226b;
 }
 
+/* Right: image */
 .sema-hero-image {
   position: relative;
   overflow: hidden;
-  min-height: 380px;
 }
 
 .sema-hero-image img {

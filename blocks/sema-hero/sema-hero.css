@@ -1,20 +1,19 @@
 /* sema-hero */
-[data-block-name="sema-hero"],
-.sema-hero-wrapper {
-  padding: 0 !important;
-  max-width: none !important;
-}
-
 .sema-hero,
 .sema-hero * {
   font-family: Arial, Helvetica, sans-serif !important;
   box-sizing: border-box;
 }
 
+/* Block wrapper must be full width */
+[data-block-name="sema-hero"] {
+  width: 100%;
+}
+
 .sema-hero {
-  display: grid !important;
+  display: grid;
   grid-template-columns: 1fr 1fr;
-  width: 100% !important;
+  width: 100%;
   min-height: 480px;
   background: #e8f4fb;
 }
@@ -32,14 +31,21 @@
   color: #003087 !important;
   line-height: 1.2;
   margin: 0 0 24px !important;
-  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.sema-hero-content h2 {
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  color: #003087 !important;
+  line-height: 1.2;
+  margin: 0 0 20px !important;
 }
 
 .sema-hero-content p {
-  font-size: 1rem !important;
+  font-size: 0.97rem !important;
   color: #222 !important;
   line-height: 1.65;
-  margin: 0 0 16px !important;
+  margin: 0 0 14px !important;
 }
 
 .sema-hero-content a,
@@ -47,62 +53,58 @@
   color: #003087 !important;
 }
 
-.sema-hero-content a.button,
-.sema-hero-content .button {
-  display: inline-block !important;
-  background: #003087 !important;
+.sema-hero-content a.button {
+  display: inline-block;
+  background: #003087;
   color: #fff !important;
-  padding: 12px 28px !important;
-  border-radius: 40px !important;
+  padding: 13px 32px;
+  border-radius: 40px;
   font-weight: 700 !important;
+  font-size: 0.95rem;
   text-decoration: none !important;
   margin-top: 8px;
-  border: none !important;
-  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
 }
 
 .sema-hero-content a.button:hover {
-  background: #00226b !important;
+  background: #00226b;
 }
 
 .sema-hero-image {
   position: relative;
   overflow: hidden;
-  min-height: 400px;
+  min-height: 380px;
 }
 
 .sema-hero-image img {
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .sema-hero-caption {
   position: absolute;
   bottom: 12px;
   right: 16px;
-  font-size: 0.75rem !important;
-  color: #fff !important;
+  font-size: 0.72rem !important;
+  color: #fff;
   background: rgba(0,0,0,0.4);
   padding: 2px 8px;
   border-radius: 3px;
   margin: 0 !important;
-  z-index: 2;
 }
 
 @media (max-width: 768px) {
   .sema-hero {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
   .sema-hero-content {
     padding: 32px 20px;
   }
   .sema-hero-content h1 {
-    font-size: 1.6rem !important;
+    font-size: 1.5rem !important;
   }
   .sema-hero-image {
     min-height: 260px;

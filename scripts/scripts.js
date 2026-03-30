@@ -10,7 +10,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
-  getMetadata,
+  getMetadata, 
 } from './aem.js';
 
 /**

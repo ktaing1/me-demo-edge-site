@@ -1,62 +1,79 @@
-/* sema-hero — full-bleed background image, text overlaid left */
+/* sema-hero — full-bleed background image with text overlay on left
+   Matches novomedlink.com: image covers full width, text sits on top left.
+   Block itself has class "sema-hero" — no nested wrapper.
+*/
 .sema-hero,
 .sema-hero * {
   font-family: Arial, Helvetica, sans-serif !important;
   box-sizing: border-box;
 }
 
-/* Full-width block with image as background */
+/* Block is a full-width positioned container */
 .sema-hero {
   position: relative;
   width: 100%;
-  min-height: 480px;
-  background-size: cover;
-  background-position: center right;
-  background-repeat: no-repeat;
-  display: flex;
-  align-items: center;
+  min-height: 420px;
+  display: block;
+  overflow: hidden;
 }
 
-/* Left-side gradient overlay so text is readable over image */
-.sema-hero::before {
-  content: '';
+/* Image fills the full block as background */
+.sema-hero-image {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(232, 244, 251, 1) 0%,
-    rgba(232, 244, 251, 0.95) 35%,
-    rgba(232, 244, 251, 0.6) 55%,
-    rgba(232, 244, 251, 0) 75%
-  );
-  pointer-events: none;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
 }
 
-/* Text content on the left */
+.sema-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  display: block;
+}
+
+/* Caption bottom-right */
+.sema-hero-caption {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-size: 0.72rem !important;
+  color: #fff;
+  background: rgba(0,0,0,0.38);
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin: 0 !important;
+  z-index: 2;
+}
+
+/* Text overlaid on top — left 50% with white/light background fade */
 .sema-hero-content {
   position: relative;
-  z-index: 2;
-  width: 52%;
-  padding: 60px 48px 60px 48px;
+  z-index: 1;
+  width: 55%;
+  min-height: 420px;
+  padding: 56px 56px 56px 48px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Soft white fade so text is readable over image */
+  background: linear-gradient(to right, rgba(255,255,255,0.97) 60%, rgba(255,255,255,0.0) 100%);
 }
 
 .sema-hero-content h1 {
-  font-size: 2rem !important;
+  font-size: 2.1rem !important;
   font-weight: 900 !important;
   color: #003087 !important;
   line-height: 1.2;
-  margin: 0 0 24px !important;
+  margin: 0 0 20px !important;
 }
 
 .sema-hero-content h2 {
   font-size: 1.6rem !important;
   font-weight: 900 !important;
   color: #003087 !important;
-  margin: 0 0 20px !important;
+  margin: 0 0 16px !important;
 }
 
 .sema-hero-content p {
@@ -80,46 +97,30 @@
   font-weight: 700 !important;
   font-size: 0.95rem;
   text-decoration: none !important;
-  margin-top: 8px;
-  transition: background 0.2s;
+  margin-top: 10px;
   border: none;
+  transition: background 0.2s;
 }
 
 .sema-hero-content a.button:hover {
   background: #00226b;
 }
 
-/* Actor caption bottom right */
-.sema-hero-caption {
-  position: absolute;
-  bottom: 12px;
-  right: 16px;
-  z-index: 2;
-  font-size: 0.72rem !important;
-  color: #fff;
-  background: rgba(0,0,0,0.4);
-  padding: 2px 8px;
-  border-radius: 3px;
-  margin: 0 !important;
-}
-
 @media (max-width: 768px) {
   .sema-hero {
-    background-position: center top;
-    min-height: 400px;
-    align-items: flex-end;
+    min-height: 0;
   }
-  .sema-hero::before {
-    background: linear-gradient(
-      to top,
-      rgba(232, 244, 251, 1) 0%,
-      rgba(232, 244, 251, 0.95) 40%,
-      rgba(232, 244, 251, 0) 70%
-    );
+  .sema-hero-image {
+    position: relative;
+    inset: auto;
+    height: 260px;
   }
   .sema-hero-content {
+    position: relative;
     width: 100%;
+    min-height: 0;
     padding: 32px 20px;
+    background: #e8f4fb;
   }
   .sema-hero-content h1 {
     font-size: 1.5rem !important;
